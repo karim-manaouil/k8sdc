@@ -1,0 +1,24 @@
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+sudo tunctl -t tap0
+sudo ip link set tap0 up
+sudo ip addr add 192.168.1.25/24 dev tap0
+sudo parprouted wlan0 tap0
+
+
+on the guest:
+
+auto eth0
+iface eth0 inet static
+  address 192.168.1.30
+  netmask 255.255.255.0
+  network 192.168.1.0
+  broadcast 192.168.1.255
+  gateway 192.168.1.25
+
+
+sudo kvm /path/to/guest.img -net nic,macaddr=DE:AD:BE:EF:90:26 -net tap,ifname=tap0,script=no
+
+
+-A INPUT -i tap0 -j ACCEPT 
+-A FORWARD -i tap0 -j ACCEPT 
+-A FORWARD -o tap0 -j ACCEPT 
