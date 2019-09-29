@@ -1,0 +1,9 @@
+#cloud-configusers:
+  - name: master
+    ssh-authorized-keys:
+      - 
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bashruncmd:
+  - echo "AllowUsers ubuntu" >> /etc/ssh/sshd_config
+  - restart ssh
