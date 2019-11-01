@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#############################################################
+#   Author:     Karim MANAOUIL                              #
+#   Email:      fk_manaouil@esi.dz                          #
+#   License:    MIT                                         #
+#############################################################
+
 nodes="kube-master:8 kube-worker:10"
 
 for node in $nodes; do
@@ -22,3 +28,4 @@ for node in $nodes; do
     kvm -m 512 -hda "nodes/$name.qcow2" -net nic,macaddr=DE:AD:BE:EF:$(($RANDOM%89+10)):$(($RANDOM%89+10)) \
         -net tap,ifname="tap$n",script=no & 
 done
+

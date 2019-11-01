@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#############################################################
+#   Author:     Karim MANAOUIL                              #
+#   Email:      fk_manaouil@esi.dz                          #
+#   License:    MIT                                         #
+#############################################################
+ 
 # @params (baseimage, output, keys)
 
 if [[ $# -ne 3 ]]; then
