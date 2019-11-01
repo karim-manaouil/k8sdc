@@ -13,7 +13,7 @@ if [[ $# -ne 3 ]]; then
     exit 1
 fi
 
-VMS="/home/afr0ck/vms"
+VMS=$PWD
 SIZE="5G"
 
 baseimage=$1
