@@ -10,6 +10,9 @@
 # $2: Cloud-Init key (master or worker ?)
 # $3: Virsh NAT interface
 # $4: A bridge to connect all VMs
+# $5: RAM in MB
+# $6: Disk size in GB
+# $7: Number of VCPUs
 
 if [[ $# -ne 4 ]]; then 
     echo "./rebuild name key nat br"
@@ -32,7 +35,7 @@ fi
 
 sudo virsh net-list
 echo
-./scripts/createvm.sh ubuntu $1 $2
-./scripts/installvms.sh $1 $3 $4
+./scripts/createvm.sh ubuntu $1 $2 $6
+./scripts/installvms.sh $1 $3 $4 $5 $7
 
 sudo virsh list --all

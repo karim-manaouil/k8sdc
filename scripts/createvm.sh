@@ -14,12 +14,11 @@ if [[ $# -ne 3 ]]; then
 fi
 
 VMS=$PWD
-SIZE="5G"
 
 baseimage=$1
 out=$2
 keys=$3
-
+size=$4
 
 # Remove existing image
 [[ -f $VMS/cluster/instances/$out.qcow2 ]] && \
@@ -34,7 +33,7 @@ qemu-img create -f qcow2 -o \
     backing_file=$VMS/cluster/base/$baseimage.qcow2 $VMS/cluster/instances/$out.qcow2
 
 # resize
-qemu-img resize $VMS/cluster/instances/$out.qcow2 $SIZE
+qemu-img resize $VMS/cluster/instances/$out.qcow2 $size
 
 # cloud-init conf iso
 echo "local-hostname: $2" > $VMS/ci-conf/$keys/meta-data
