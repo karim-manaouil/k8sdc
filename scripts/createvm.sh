@@ -37,6 +37,7 @@ qemu-img create -f qcow2 -o \
 qemu-img resize $VMS/cluster/instances/$out.qcow2 $SIZE
 
 # cloud-init conf iso
+echo "local-hostname: $2" > $VMS/ci-conf/$keys/meta-data
 genisoimage -output $VMS/cluster/instances/$out-cidata.iso\
     -volid cidata -joliet -rock $VMS/ci-conf/$keys/user-data $VMS/ci-conf/$keys/meta-data
 
