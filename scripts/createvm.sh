@@ -8,11 +8,6 @@
  
 # @params (baseimage, output, keys)
 
-if [[ $# -ne 3 ]]; then
-    echo "Missing arguments"
-    exit 1
-fi
-
 VMS=$PWD
 
 baseimage=$1
@@ -33,7 +28,7 @@ qemu-img create -f qcow2 -o \
     backing_file=$VMS/cluster/base/$baseimage.qcow2 $VMS/cluster/instances/$out.qcow2
 
 # resize
-qemu-img resize $VMS/cluster/instances/$out.qcow2 $size
+qemu-img resize $VMS/cluster/instances/$out.qcow2 $size"G"
 
 # cloud-init conf iso
 echo "local-hostname: $2" > $VMS/ci-conf/$keys/meta-data
