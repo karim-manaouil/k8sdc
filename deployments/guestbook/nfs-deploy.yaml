@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: nfs-server
+        labels:
+                app: nfs-server
+spec:
+        selector:
+                matchLabels:
+                        app: nfs-server        
+        template:
+                metadata:
+                    labels:
+                            app: nfs-server
+                spec:
+                        nodeSelector:
+                            nfs: "true"
+                        containers:
+                                - name: nfs-server
+                                  image: itsthenetwork/nfs-server-alpine:latest
+                                  securityContext:
+                                          privileged: true
+                                  env:
+                                          - name: SHARED_DIRECTORY
+                                            value: /nfsshare
+                                  ports:
+                                          - containerPort: 2049
+                                  volumeMounts:
+                                                - mountPath: /nfsshare
+                                                  name: storage
+                        volumes:
+                            - name: storage
+                              emptyDir: {}
