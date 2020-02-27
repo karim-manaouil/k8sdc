@@ -14,14 +14,17 @@ function sizeoflist() {
 }
 
 
-CONFIG_LIST=$(find . -name config.yaml)
+if [[ $CONFIGS ~= "ALL" ]]; then
+	CONFIGS=$(find . -name config.yaml)
+fi
 
-if [[ $(sizeoflist ${CONGI_LIST[@]}) -eq 0 ]]; then
+if [[ $(sizeoflist ${CONFIGS[@]}) -eq 0 ]]; then
 	echo "Script must be run from a valid clusterloader2 directory"
 	exit 1
 fi
 
-for config in $CONFIG_LIST; do 
+
+for config in $CONFIGS; do 
 	export CONFIG=$config
 	./clusterloader --kubeconfig=$KUBECONFIG \
 		--testconfig=$CONFIG \
