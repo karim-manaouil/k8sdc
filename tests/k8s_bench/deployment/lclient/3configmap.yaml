@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lc-cm
+  namespace: loadbench
+data:
+  loadserver: loadserver

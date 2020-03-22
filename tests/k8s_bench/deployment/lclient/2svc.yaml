@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+        name: loadclient
+        namespace: loadbench
+spec:
+        selector:
+                app: loadclient
+        ports:
+                - port: 80
+                  targetPort: 80

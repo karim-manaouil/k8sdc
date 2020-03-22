@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadclient
+  namespace: loadbench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadclient
+  template:
+    metadata:
+      labels:
+        app: loadclient
+    spec:
+      volumes:
+        - name: lc-pvc
+          persistentVolumeClaim:
+            claimName: lc-pvc
+      containers:
+        - name: lclient
+          image: 'afr0ck/load:lclient'
+          volumeMounts:
+            - mountPath: /tmp
+              name: lc-pvc
+          env:
+            - name: LOADSERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: lc-cm
+                  key: loadserver

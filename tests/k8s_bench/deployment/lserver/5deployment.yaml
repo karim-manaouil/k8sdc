@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadserver
+  namespace: loadbench
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadserver
+  template:
+    metadata:
+      labels:
+        app: loadserver
+    spec:
+      volumes:
+        - name: ls-pvc
+          persistentVolumeClaim:
+            claimName: ls-pvc
+      containers:
+        - name: lserver
+          image: 'afr0ck/load:lserver'
+          volumeMounts:
+            - mountPath: /tmp
+              name: ls-pvc
+          env:
+            - name: MAX_LINES
+              valueFrom:
+                configMapKeyRef:
+                  name: ls-cm
+                  key: maxlines
+
