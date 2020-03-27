@@ -89,7 +89,9 @@ parse_arguments()
     done   
 }
 
-
+# Usage: ./tc.sh --src PREFIX:START:END --dst PREFIX:START:END --delay MS
+# e.g. ./tc.sh --src 10.158.0:2:2 10.158.0:3:100 50
+# it will apply a 50ms delay between 10.158.0.2 and 10.158.0.{3-100}
 main() {
 	parse_arguments $@
 
@@ -102,6 +104,11 @@ main() {
 	for i in `seq ${DST_COMPS[1]} ${DST_COMPS[2]}`; do 
 		dst+=("${DST_COMPS[0]}.$i")	
 	done
+
+	if [ -z "$src" ] || [ -z "$dst" ] || [ -z "$DELAY" ]; then
+		echo "Arguments errors"
+		exit 1
+	fi
 
 	tc_site_to_site_sym src[@] dst[@] $DELAY
 }
