@@ -1,0 +1,28 @@
+---
+- name: Install Golang, fetch perf-tests, conf env
+  hosts: kube-master
+  become: true
+
+  tasks:
+          - name: Download Go
+            get_url:
+                    url: https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
+                    dest: /root/
+
+          - name: Extract Go  
+            shell:
+                  chdir: /root/
+                  cmd: tar -C /usr/local -xzf go1.13.8.linux-amd64.tar.gz
+
+          - name: Setup bashrc
+            shell:
+                    cmd: echo "export GOPATH=/root/go;export GOBIN=$GOPATH/bin;export PATH=$PATH:/usr/local/go/bin" >> /root/.bashrc
+
+          - name: Fetch perf-tests
+            shell:
+                    cmd: go get k8s.io/perf-tests
+            environment:
+                    GOPATH: /root/go
+                    GOBIN: /root/go/bin
+                    PATH: $PATH:/usr/local/go/bin
+
