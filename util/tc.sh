@@ -3,26 +3,33 @@
 set +e
 
 # $1: src
-# $2: dst
-# $3: delay in ms
+# $2: delay in ms
 do_tc() {
-	if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+	if [ -z "$1" ] || [ -z "$2" ]; then
 		echo "Arguments error when calling do_tc"
 		exit 1
 	fi
 	
-	ssh root@${1} tc qdisc del dev ens3 root
 	ssh root@${1} tc qdisc add dev ens3 root handle 1: prio
-	ssh root@${1} tc qdisc add dev ens3 parent 1:1 handle 2: netem delay ${3}ms
+	ssh root@${1} tc qdisc add dev ens3 parent 1:1 handle 2: netem delay ${2}ms
+}
+
+# $1: src
+# $2: dst
+add_tc_filter() {
+	if [ -z "$1" ] || [ -z "$2" ]; then
+		echo "Arguments error when calling do_tc"
+		exit 1
+	fi
+
 	ssh root@${1} tc filter add dev ens3 parent 1:0 protocol ip pref 55 handle ::55 u32 match ip dst ${2} flowid 2:1
 }
 
 # Symmetric master to site tc
 # $1: master
 # $2: site[@]
-# $3: delay in ms
 tc_master_to_site_sym() {
-	if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+	if [ -z "$1" ] || [ -z "$2" ]; then
 		echo "Arguments error when calling tc_master_to_site"
 		exit 1
 	fi
@@ -30,8 +37,8 @@ tc_master_to_site_sym() {
 	local nodes=("${!2}")
 
 	for node in ${nodes[@]}; do
-		do_tc $1 $node $3 2>/dev/null
-		do_tc $node $1 $3 2>/dev/null
+		add_tc_filter $1 $node 2>/dev/null
+		add_tc_filter $node $1 2>/dev/null
 		printf "%s " $node
 	done
 }
@@ -50,7 +57,8 @@ tc_site_to_site_sym() {
 	for snode in ${ssite[@]}; do
 		printf "%s" $snode
 		( # concurrent subshell processes
-			tc_master_to_site_sym $snode $2 $3
+			do_tc $snode $3
+			tc_master_to_site_sym $snode $2
 		) &
 		echo
 	done
