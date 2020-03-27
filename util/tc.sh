@@ -97,7 +97,9 @@ parse_arguments()
     done   
 }
 
-
+# Usage: ./tc.sh --src PREFIX:START:END --dst PREFIX:START:END --delay MS
+# e.g. ./tc.sh --src 10.158.0:2:2 10.158.0:3:100 50
+# it will apply a 50ms delay between 10.158.0.2 and 10.158.0.{3-100}
 main() {
 	parse_arguments $@
 
