@@ -5,7 +5,7 @@ set +e
 NamesMap[9090]="0ms"
 NamesMap[9094]="50ms"
 NamesMap[9098]="250ms"
-NamesMap[90912]="400ms"
+NamesMap[9012]="400ms"
 
 declare query
 
@@ -83,7 +83,7 @@ get_api_req_percns() {
 }
 
 main() {
-	range="12h"
+	range="2h"
 	clusters=($@)
 	mkdir -p out
 	for cluster in ${clusters[@]}; do
