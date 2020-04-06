@@ -65,7 +65,7 @@ def convert_stat_to_json(stat):
         jobject["field1"] = row["latency"] + "ms"
         i = 2
         for percn in row["data"]:
-            key = percn["percentile"] + "ms"
+            key = percn["percentile"] + "%"
             jobject[key] = percn["value"]
             i = i + 1
 
