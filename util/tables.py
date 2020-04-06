@@ -56,6 +56,53 @@ def find_value_of(obj, resource, verb):
                 slot["metric"]["verb"] == verb:
                     return slot["value"][1]
 
+def find_pod_step(obj, step, percn):
+    for entry in obj["dataItems"]:
+        if entry["labels"]["Metric"] == step:
+            key = "Perc" + percn
+            return entry["data"][key]
+
+def get_pod_cols(obj, order, percn):
+    cols = []
+    for step in order:
+        value = find_pod_step(obj, step, percn)
+        cols.append({
+            "phase": step,
+            "value": value
+            })
+
+    return cols
+
+
+def create_pod_stats(percn):
+    order = ["create_to_schedule", "schedule_to_run", "run_to_watch", "pod_startup"]
+    latencies = ["0", "50", "250", "400"]
+    
+    rows = []
+    for latency in latencies:
+        filename = latency.__add__(".json")
+        filename = os.path.join("pods", filename)
+        with open(filename, "r") as fh:
+            obj = json.load(fh)
+            cols = get_pod_cols(obj, order, percn)
+
+        rows.append({
+            "latency": latency,
+            "cols": cols
+            })
+
+    return rows 
+
+def convert_pod_stats_to_json(rows):
+    table = []
+    for row in rows:
+        jobject = {}
+        jobject["field"] = row["latency"]
+        for col in row["cols"]:
+            jobject[col["phase"]] = col["value"]
+        table.append(jobject)
+    return table
+
 # Later the json obained can easily be converted to xls
 # and exported to Excel for easy graphing
 def convert_stat_to_json(stat):
@@ -81,7 +128,13 @@ def convert_stats_to_json(stats):
             json.dump(table, fh)
     
 def main():
-    create_stats(stats, types)
-    convert_stats_to_json(stats)
+    # create_stats(stats, types)
+    # convert_stats_to_json(stats)
+
+    t = create_pod_stats("90")
+    r = convert_pod_stats_to_json(t)
+
+    with open("pods_90.json", "w+") as fh:
+        json.dump(r, fh)
 
 main()
