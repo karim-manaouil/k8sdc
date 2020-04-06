@@ -1,5 +1,6 @@
 import json
 import os
+import copy 
 
 stats=[]
 types= [["pods", "LIST"], ["pods", "POST"], ["configmaps", "GET"]]
@@ -15,7 +16,7 @@ def create_stats(stables, types):
 
 def create_stats_for(resource, verb):
     rows=[]
-    latencies=["0", "50"] # Add 250, 400
+    latencies=["0", "50", "250", "400"]
 
     for latency in latencies:
         cols = get_stats_of(resource, verb, latency)
@@ -64,11 +65,11 @@ def convert_stat_to_json(stat):
         jobject["field1"] = row["latency"] + "ms"
         i = 2
         for percn in row["data"]:
-            key = "field" + f'{i}'
+            key = percn["percentile"] + "ms"
             jobject[key] = percn["value"]
             i = i + 1
 
-        table.append(jobject)
+        table.append(copy.deepcopy(jobject))
     
     return table
 
