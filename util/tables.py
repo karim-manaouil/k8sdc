@@ -2,6 +2,9 @@ import json
 import os
 import copy 
 
+import matplotlib
+import matplotlib.pyplot as plt
+
 stats=[]
 types= [["pods", "LIST"], ["pods", "POST"], ["configmaps", "GET"]]
 
@@ -126,15 +129,54 @@ def convert_stats_to_json(stats):
         out = stat["verb"] + "_" + stat["resource"] + ".json"
         with open(out, "w+") as fh:
             json.dump(table, fh)
-    
+
+# This function assumes there is one resource and one verb.
+# One should use a script and a filesystem key-value based
+# hierarchy to organize its structure for structured parsing.
+# This decouples responsability and makes things easier to 
+# build.
+# Assumes one verb and one resource only in the list
+def get_cdf_of(resource, verb, path):
+    filename = os.path.join(path, resource, verb + ".json")
+
+    with open(filename, "r") as f:
+        obj = json.load(f)
+        result = obj["data"]["result"]
+        result.sort(key=lambda k: float(k["metric"]["le"]))
+        
+        x = []
+        y = []
+        
+        count = float(result[len(result) - 1]["value"][1])
+
+        for o in result:
+            x.append(o["metric"]["le"])
+            y.append(float(o["value"][1])/count*100)
+
+        return x, y
+
+def draw_cdf(x, y):
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+
+    ax.set(xlabel='duration (s)', ylabel='probability',
+            title='Request duration CDF')
+
+    plt.show()    
+
 def main():
     # create_stats(stats, types)
     # convert_stats_to_json(stats)
 
-    t = create_pod_stats("90")
-    r = convert_pod_stats_to_json(t)
+    # t = create_pod_stats("90")
+    # r = convert_pod_stats_to_json(t)
 
-    with open("pods_90.json", "w+") as fh:
-        json.dump(r, fh)
+    # with open("pods_90.json", "w+") as fh:
+        # json.dump(r, fh)
+   
+   x, y = get_cdf_of("pods","LIST","cdf") 
+
+   draw_cdf(x, y)
+
 
 main()
