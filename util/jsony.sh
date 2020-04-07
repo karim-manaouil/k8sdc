@@ -82,7 +82,7 @@ get_api_req_percns() {
 	done	
 }
 
-main() {
+api_latency() {
 	range="2h"
 	clusters=($@)
 	mkdir -p out
@@ -93,5 +93,40 @@ main() {
 	done
 }
 
-main $@
+# CDF logic
+# $1: resource
+# $2: verb
+get_cdf_query() {
+	local q="sum by (le,resource,verb) \
+		(apiserver_request_duration_seconds_bucket{resource=~\"$1\",verb=~\"$2\"})"
+	
+	echo $q
+}
+
+# $1: port
+api_latency_cdf() {
+	pairs=("LIST/pods" "POST/pods" "GET/configmaps")
+	mkdir -p cdf
+
+	for pair in ${pairs[@]}; do
+		resource=$(echo $pair | cut -d'/' -f2)
+		verb=$(echo $pair | cut -d'/' -f1)
+
+		mkdir -p cdf/$resource
+		query=$(get_cdf_query $resource $verb)
+		exec_query $1 > cdf/$resource/$verb".json"
+	done	
+}
+
+main() {
+	# api_latency $@
+	api_latency_cdf 9090
+}
+
+if [ "$#" -eq "2" ]; then
+	query="$2"
+	exec_query $1 
+else
+	main $@
+fi
 
