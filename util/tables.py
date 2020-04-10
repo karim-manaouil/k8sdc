@@ -155,15 +155,30 @@ def get_cdf_of(resource, verb, path):
 
         return x, y
 
-def draw_cdfs(pair, ys):
+def draw_cdfs(pair, ys): 
     for y in ys:
-        plt.plot(y["x"], y["y"], label = y["latency"] + "ms")
+        # making the graph look better
+        for p in range(99, 77, -1):
+            if p < y["y"][0]:
+                y["y"].insert(0, p)
+                y["x"].insert(0, y["x"][0])
+
+        plt.plot(y["y"], y["x"], label = y["latency"] + "ms")
     
-    plt.xlabel('Durations (s)')
-    plt.ylabel('Probability')
+    plt.ylabel('Durations (s)')
+    plt.xlabel('Percentage')
     plt.title('api request duration CDF of ' + pair[0] + " " + pair[1])
 
+    import numpy as np
+    
+    plt.xticks(np.arange(70, 100, 1)) 
+    #plt.ylim([90, 100.5])
+
+    # plt.yticks(np.arange(90, 100, 1))
+
+    plt.legend()
     plt.show()
+    
     #plt.savefig(pair[0] + "_" + pair[1] + ".png", dpi=1000)
 
 def generate_cdfs(pairs, latencies, path):
@@ -191,8 +206,16 @@ def main():
     # with open("pods_90.json", "w+") as fh:
         # json.dump(r, fh)
    
-    pairs = [["pods", "LIST"], ["pods", "POST"], ["configmaps", "GET"]]
-    latencies = ["0"]
+    pairs = []
+    pairs.append(["pods", "LIST"])
+    pairs.append(["sum", "SUM"])
+    pairs.append(["pods", "POST"])
+    pairs.append(["configmaps", "GET"])
+    pairs.append(["configmaps", "LIST"])
+    pairs.append(["services", "GET"])
+    pairs.append(["services", "LIST"])
+
+    latencies = ["0", "50", "250", "400"]
     
     generate_cdfs(pairs, latencies, "cdf")
 

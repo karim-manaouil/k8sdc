@@ -103,24 +103,43 @@ get_cdf_query() {
 	echo $q
 }
 
+get_sum_cdf_query() {
+	local q="sum by (le) (apiserver_request_duration_seconds_bucket)"
+
+	echo $q
+
+}
+
 # $1: port
 api_latency_cdf() {
-	pairs=("LIST/pods" "POST/pods" "GET/configmaps")
-	mkdir -p cdf
+	pairs=("SUM/sum" "LIST/pods" "POST/pods" "GET/configmaps", "LIST/configmaps", "GET/services", "LIST/services")
+	path=cdf/${NamesMap[$1]}
+
+	mkdir -p "$path"
 
 	for pair in ${pairs[@]}; do
 		resource=$(echo $pair | cut -d'/' -f2)
 		verb=$(echo $pair | cut -d'/' -f1)
 
-		mkdir -p cdf/$resource
-		query=$(get_cdf_query $resource $verb)
-		exec_query $1 > cdf/$resource/$verb".json"
+		mkdir -p "$path/$resource"
+		if [[ "$verb" =~ "SUM" ]]; then
+			query=$(get_sum_cdf_query)
+		else
+			query=$(get_cdf_query $resource $verb)
+		fi
+		exec_query $1 > "$path/$resource/$verb"".json"
 	done	
 }
 
 main() {
 	# api_latency $@
-	api_latency_cdf 9090
+	
+	if [[ $# -ne 1 ]]; then
+		echo "Missing argument"
+		exit 1
+	fi
+
+	api_latency_cdf $@
 }
 
 if [ "$#" -eq "2" ]; then
