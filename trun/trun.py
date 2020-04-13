@@ -6,11 +6,6 @@ from kubernetes import client, config
 MPATH = "manifests"
 CFILE = "test.yaml"
 
-switch = {
-        "Deploy": deploy_manifest,
-        "WaitForAllDeploymentsCompletion": wait_for_all_deployments_completion
-        }
-
 def deploy_manifest(step):
     manifest = step["Manifest"]
     ns = step["Namespace"]
@@ -42,11 +37,17 @@ def parse_config():
         o = yaml.load(f)
         return o
 
-def run_test(steps):
-    for step in steps:
-        func = switch[step]
-        func(step)
 
+switch = {
+        "Deploy": deploy_manifest,
+        "WaitForAllDeploymentsCompletion": wait_for_all_deployments_completion
+        }
+
+
+def run_test(test):
+    for step in test["Steps"]:
+        func = switch[step["name"]]
+        func(step)
 
 def main():
     config.load_kube_config()
