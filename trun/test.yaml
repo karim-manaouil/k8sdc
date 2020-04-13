@@ -1,0 +1,7 @@
+Steps:
+        - Deploy:
+                Manifest: d.yaml
+                Namespace: test
+
+        - WaitForAllDeploymentsCompletion:
+                Namespace: test
