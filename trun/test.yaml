@@ -5,3 +5,12 @@ Steps:
 
     - Name: "WaitForAllDeploymentsCompletion"
       Namespace: test
+
+    - Name: "ScaleDeployment"
+      Namespace: test
+      DeploymentName: defactod
+      Replicas: 100
+
+    - Name: "WaitForAllDeploymentsCompletion"
+      Namespace: test
+
