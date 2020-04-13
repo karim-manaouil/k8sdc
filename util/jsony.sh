@@ -112,7 +112,7 @@ get_sum_cdf_query() {
 
 # $1: port
 api_latency_cdf() {
-	pairs=("SUM/sum" "LIST/pods" "POST/pods" "GET/configmaps", "LIST/configmaps", "GET/services", "LIST/services")
+	pairs=("SUM/sum" "LIST/pods" "POST/pods" "GET/configmaps" "LIST/configmaps" "GET/services" "LIST/services" "PATCH/pods")
 	path=cdf/${NamesMap[$1]}
 
 	mkdir -p "$path"
