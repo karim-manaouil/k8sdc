@@ -3,5 +3,5 @@ Steps:
       Manifest: d.yaml
       Namespace: test
 
-    - Name: "WaitForAllDeploymentsCompletion":
+    - Name: "WaitForAllDeploymentsCompletion"
       Namespace: test

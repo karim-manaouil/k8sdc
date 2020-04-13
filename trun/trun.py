@@ -1,6 +1,7 @@
 import yaml
 import os, sys
 import subprocess
+import time
 from kubernetes import client, config
 
 MPATH = "manifests"
@@ -26,11 +27,22 @@ def wait_for_all_deployments_completion(step):
         ns = step["Namespace"]
 
     api = client.AppsV1Api()
-    deployments = api.list_namespaced_deployment(namespace=ns, watch=False)
-    
-    count = 0
-#    for d in deployments:
+   
+    while True:
+        r = api.list_namespaced_deployment(namespace=ns, watch=False)
+        
+        count = 0
+        for d in r['items']:
+            ready = int(d['status']['ready_replicas'])
+            replicas = int(d['status']['replicas'])
 
+            if ready == replicas:
+                count++
+        
+        if count == len(r['items']):
+            return
+
+        time.sleep(1)
 
 def parse_config():
     with open(CFILE, "r") as f:

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: "Defacto Deployment"
+    name: "defactod"
 spec:
     replicas: 1
     selector:
@@ -13,4 +13,5 @@ spec:
                 app: test
         spec:
             containers:
-                - image: gcr.io/google-containers/pause-amd64
+                - name: pause
+                  image: gcr.io/google-containers/pause
