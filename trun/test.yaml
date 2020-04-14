@@ -1,16 +1,26 @@
 Steps:
-    - Name: "Deploy"
-      Manifest: d.yaml
-      Namespace: test
+    - Name: Deploy
+      Manifest: n.yaml
+      Namespace: default
 
-    - Name: "WaitForAllDeploymentsCompletion"
-      Namespace: test
+    - Name: Loop
+      Count: 10
+      Steps:
+        - Name: Deploy
+          Manifest: d.yaml
+          ManifestName: Generate
+          Namespace: test
 
-    - Name: "ScaleDeployment"
+        - Name: WaitForAllDeploymentsCompletion
+          Namespace: test
+
+    - Name: ScaleDeployment
       Namespace: test
       DeploymentName: defactod
       Replicas: 100
 
-    - Name: "WaitForAllDeploymentsCompletion"
+    - Name: WaitForAllDeploymentsCompletion
       Namespace: test
 
+    - Name: Delete
+      Namespace: test

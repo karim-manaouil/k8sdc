@@ -1,7 +1,6 @@
 import yaml
-import os, sys
-import subprocess
-import time
+import os, sys, subprocess
+import time, random, string
 from kubernetes import client, config
 
 MPATH = "manifests"
@@ -9,11 +8,31 @@ CFILE = "test.yaml"
 
 api = None
 
+def rand_str(length=5):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
+
+def loop(step):
+    for i in range(step["Count"]):
+        print("iteration", str(i))
+        run_test(step)
+        print("end of iteration")
+
 def deploy_manifest(step):
     manifest = step["Manifest"]
     ns = step["Namespace"]
 
     path = os.path.join(MPATH, manifest)
+
+    if "ManifestName" in step:
+        o = yaml.safe_load(open(path, "r"))
+        o["metadata"]["name"] = "test-" + rand_str() \
+                if step["ManifestName"] == "Generate" else step["ManifestName"]
+
+        path = "/tmp/test" + o["metadata"]["name"] 
+
+        with open(path, "w+") as f:
+            yaml.safe_dump(o, f)
 
     e = subprocess.run(["kubectl", "apply", "-n", ns, "-f", path],
             stdout=subprocess.DEVNULL)
@@ -21,6 +40,16 @@ def deploy_manifest(step):
     if e.returncode != 0:
         print("Error applying manifest")
         sys.exit(1)
+
+def delete(step):
+    ns = step['Namespace']
+
+    e = subprocess.run(["kubectl", "delete", "ns", ns])
+    
+    if e.returncode != 0:
+        print("Error scaling deployment")
+        sys.exit(1)
+
 
 def scale_deployment(step):
     ns = step['Namespace']
@@ -64,6 +93,7 @@ def parse_config():
 
 
 switch = {
+        "Loop": loop,
         "Deploy": deploy_manifest,
         "ScaleDeployment": scale_deployment,
         "WaitForAllDeploymentsCompletion": wait_for_all_deployments_completion
