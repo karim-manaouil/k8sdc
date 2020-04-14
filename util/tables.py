@@ -4,6 +4,7 @@ import copy
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
 stats=[]
 types= [["pods", "LIST"], ["pods", "POST"], ["configmaps", "GET"]]
@@ -153,7 +154,7 @@ def get_cdf_of(resource, verb, path):
             x.append(o["metric"]["le"])
             y.append(float(o["value"][1])/count*100)
 
-        return x, y
+        return x, y, count
 
 def draw_cdfs(pair, ys): 
     for y in ys:
@@ -181,20 +182,47 @@ def draw_cdfs(pair, ys):
     
     #plt.savefig(pair[0] + "_" + pair[1] + ".png", dpi=1000)
 
+def draw_histograms(pair, ys):
+    x = np.arange(len(ys[0]["x"]))
+
+    fig, ax = plt.subplots()
+    
+    i = 0; rs = []
+    for y in ys:
+        yp = copy.deepcopy(y)
+        for i in range(0, len(yp)):
+            yp[i] = yp[i]/100*y["count"]
+        rs.append(ax.bar(x + 0.25*i, yp, width = 0.25, label = y["latency"] + "ms"))
+        i = i + 1
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(ys[0]["x"])
+    ax.legend()
+
+    fig.tight_layout()
+    
+    ax.set_xlabel("Frequency")
+    ax.set_ylabel('Latency')
+    ax.set_title(pair[0] + " " + pair[1] + " frequency histogram")
+
+    plt.show()
+
 def generate_cdfs(pairs, latencies, path):
     for pair in pairs:
         ys=[]
         for latency in latencies:
            p = os.path.join(path, latency + "ms")
-           x, y = get_cdf_of(pair[0], pair[1], p)
+           x, y, count = get_cdf_of(pair[0], pair[1], p)
            
            ys.append({
                "latency": latency,
                "x": x,
                "y": y,
+               "count": count
                })
 
         draw_cdfs(pair, ys)
+        draw_histograms(pair, ys)
 
 def main():
     # create_stats(stats, types)
@@ -210,12 +238,9 @@ def main():
     pairs.append(["sum", "SUM"])
     pairs.append(["pods", "LIST"])    
     pairs.append(["pods", "PATCH"])
-    # pairs.append(["configmaps", "GET"])
     pairs.append(["configmaps", "LIST"])
-    # pairs.append(["services", "GET"])
-    # pairs.append(["services", "LIST"])
-
-    latencies = ["0", "50", "250", "400"]
+    
+    latencies = ["0", "25", "50", "250", "400"]
     
     generate_cdfs(pairs, latencies, "cdf")
 
