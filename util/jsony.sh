@@ -94,6 +94,20 @@ api_latency() {
 	done
 }
 
+# $1: K (default 50)
+get_topk_req_count_query() {
+    local q="topk(${1:-50},sum by(resource, verb) (apiserver_request_count))"
+    
+    echo $q
+}
+
+# $1: port
+# $2: K (default 50)
+get_topk_req_count() {
+    query=$(get_topk_req_count_query $2)
+  	exec_query $1
+}
+
 # CDF logic
 # $1: resource
 # $2: verb
@@ -113,7 +127,16 @@ get_sum_cdf_query() {
 
 # $1: port
 api_latency_cdf() {
-	pairs=("SUM/sum" "LIST/pods" "POST/pods" "GET/configmaps" "LIST/configmaps" "GET/services" "LIST/services" "PATCH/pods")
+    verbs=(LIST GET POST PATCH)
+    resources=(deployments replicasets statefulsets pods configmaps services)
+
+    pairs=("SUM/sum")
+    for r in ${resources[@]}; do
+        for v in ${verbs[@]}; do
+            pairs+=("$v/$r")
+        done
+    done
+
 	path=cdf/${NamesMap[$1]}
 
 	mkdir -p "$path"
@@ -132,21 +155,59 @@ api_latency_cdf() {
 	done	
 }
 
-main() {
-	# api_latency $@
-	
-	if [[ $# -ne 1 ]]; then
-		echo "Missing argument"
-		exit 1
-	fi
+get_hdb_query() {
+    local q="sum by (le,resource,verb) (apiserver_request_duration_seconds_bucket)"
 
-	api_latency_cdf $@
+    echo $q
 }
 
-if [ "$#" -eq "2" ]; then
-	query="$2"
-	exec_query $1 
-else
-	main $@
-fi
+# $1: port
+get_hdb_of() {
+    query=$(get_hdb_query)
+    exec_query $1
+}
 
+main() {
+    TOPK=0
+    HDB=0
+    while (( $# )); do
+        case $1 in
+             --port)
+                PORT=$2 
+                shift 2
+                ;;
+
+            --topk)
+                TOPK=$2
+                shift 2
+                ;;
+            
+            --hdb)
+                HDB=1
+                shift 1
+                ;;
+
+           --cdf)
+                CDF=1
+                shift 1
+                ;;
+            *)
+               echo "unknown option $1"
+               exit 1 
+        esac                                
+    done   
+    
+    echo $CDF $TOPK $PORT 
+
+    [[ $HDB -eq 1 ]] && get_hdb_of $PORT >> "hdb_${NamesMap[$PORT]}.json"
+
+    if [[ $CDF -eq 1 ]]; then 
+        api_latency_cdf $PORT
+    fi
+
+    if [[ $TOPK -ne 0 ]]; then
+        get_topk_req_count $PORT $TOPK > "top$TOPK""_""${NamesMap[$PORT]}count.json"
+    fi
+}
+
+main $@
