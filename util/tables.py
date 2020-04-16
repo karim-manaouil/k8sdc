@@ -268,10 +268,15 @@ def print_reached_100p_at(shdb):
 
 def generate_cdf_from_hdb(shdb_list, res, verb):
     ys = []
+    formatN = lambda n: n if n%1 else int(n)
+    
     for entry in shdb_list:
-        m = entry["shdb"][res][verb]
+        if res not in entry["shdb"] or \
+                verb not in entry["shdb"][res]:
+                    continue
+        m = entry["shdb"][res][verb]                         
         T = float(m["70"])
-        x = [ k for k in sorted(m.keys())]
+        x = [str(formatN(l)) for l in [k for k in sorted([float(j) for j in m.keys()])]]
         y = [ float(m[k])/T*100 for k in x]
         
         ys.append({
@@ -295,7 +300,7 @@ def draw_cdf_from_hdb(shdb_list):
                 })
 
     for d in alld:
-        draw_cdf([d["resource"], d["verb"]], d["ys"])
+        draw_cdfs([d["resource"], d["verb"]], d["ys"])
 
 def main():
     # create_stats(stats, types)
