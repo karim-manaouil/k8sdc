@@ -1,5 +1,5 @@
 import json
-import os
+import os, sys
 import copy 
 
 import matplotlib
@@ -156,6 +156,31 @@ def get_cdf_of(resource, verb, path):
 
         return x, y, count
 
+# Histograms database parser.
+# This generates a map of resources to (a map 
+# of verbs to (a map of "le" to (values)))
+def parse_hdb(path):
+    shdb = {} # resources map
+    
+    with open(path, "r") as f:
+        hdb = json.load(f)
+
+        for o in hdb["data"]["result"]:
+            res = o["metric"]["resource"]
+            verb = o["metric"]["verb"]
+            le  = o["metric"]["le"]
+            
+            if res not in shdb:
+                shdb[res] = {}
+
+            if verb not in shdb[res]:
+                shdb[res][verb] = {}
+
+            shdb[res][verb]["1000" if le == "+Inf" else le] \
+                    = o["value"][1]
+            
+    return shdb
+
 def draw_cdfs(pair, ys): 
     for y in ys:
         # making the graph look better
@@ -222,7 +247,24 @@ def generate_cdfs(pairs, latencies, path):
                })
 
         draw_cdfs(pair, ys)
-        draw_histograms(pair, ys)
+        #draw_histograms(pair, ys)
+
+def print_reached_100p_at(shdb):
+    uo={}
+    for res in shdb:
+        for verb in shdb[res]:
+            total = shdb[res][verb]["1000"]
+            for k in sorted(shdb[res][verb].keys()):
+                if shdb[res][verb][k] == total:
+                    uo[verb+"/"+res] = float(k)
+                    break
+
+    o = {k: v for k, v in sorted(uo.items(), key=lambda item: item[1])}
+    
+    for k in o:
+        v = "+Inf" if o[k] == 1000 else str(o[k])
+        print ("".join(w.ljust(45) for w in [k, v]))
+ 
 
 def main():
     # create_stats(stats, types)
@@ -242,6 +284,10 @@ def main():
     
     latencies = ["0", "25", "50", "250", "400"]
     
-    generate_cdfs(pairs, latencies, "cdf")
+    #generate_cdfs(pairs, latencies, "cdf")
+
+    shdb = parse_hdb("hdb/hdb_0ms.json")
+
+    print_reached_100p_at(shdb)
 
 main()
