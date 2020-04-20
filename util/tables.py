@@ -250,21 +250,46 @@ def parse_hdb(path):
             
     return shdb
 
-def print_reached_100p_at(shdb):
-    uo={}
+#
+# returns (le, count)
+# 
+def get_reached_100p_rv(shdb, res, verb):
+    maxx = shdb[res][verb]["70"]
+    for k in sorted(shdb[res][verb].keys()):
+            if shdb[res][verb][k] == maxx:
+                return k, shdb[res][verb][k]
+# 
+# returns ordered map of [res/verb/count]=le
+#
+def get_reached_100p_ordered(shdb):
+    uo = {}
     for res in shdb:
         for verb in shdb[res]:
-            total = shdb[res][verb]["70"]
-            for k in sorted(shdb[res][verb].keys()):
-                if shdb[res][verb][k] == total:
-                    uo[verb+"/"+res] = float(k)
-                    break
-
-    o = {k: v for k, v in sorted(uo.items(), key=lambda item: item[1])}
+            le, count = get_reached_100p_rv(shdb, res, verb)
+            uo[res + "/" + verb] = le + "/" + count
     
-    for k in o:
-        v = "+Inf" if o[k] == 70 else str(o[k])
-        print ("".join(w.ljust(45) for w in [k, v]))
+    oo = {k: v for k, v in \
+            sorted(uo.items(), key=lambda item: float(item[1].split("/")[0]))}
+    
+    return oo
+
+
+def print_reached_100p_at(oo_list):
+    ref = oo_list[0]
+    
+    for key in ref:
+        concat = [] 
+        concat.append(ref[key])
+        
+        for oo in oo_list[1:]:
+            if key not in oo:
+                concat.append("??/??")
+            else:
+                concat.append(oo[key])
+
+        concat.insert(0, key)
+
+        print ("%-50s %-10s %-10s %-10s %-10s %-10s" % (concat[0], concat[1], concat[2], concat[3], concat[4], concat[5]))
 
 def generate_cdf_from_hdb(shdb_list, res, verb):
     ys = []
@@ -274,6 +299,7 @@ def generate_cdf_from_hdb(shdb_list, res, verb):
         if res not in entry["shdb"] or \
                 verb not in entry["shdb"][res]:
                     continue
+
         m = entry["shdb"][res][verb]                         
         T = float(m["70"])
         x = [str(formatN(l)) for l in [k for k in sorted([float(j) for j in m.keys()])]]
@@ -302,35 +328,32 @@ def draw_cdf_from_hdb(shdb_list):
     for d in alld:
         draw_cdfs([d["resource"], d["verb"]], d["ys"])
 
-def main():
-    # create_stats(stats, types)
-    # convert_stats_to_json(stats)
+def print_hdb_compare(shdb, resource, verb, latencies):
+    for le in shdb[0]["shdb"][res][verb]:
+        vs = []
+        for latency in latencies:
+            vs.append(str(shdb[str(latency)]["shdb"][res][verb][le]))
 
-    # t = create_pod_stats("90")
-    # r = convert_pod_stats_to_json(t)
+        for v in vs:
+          k = "+Inf" if le == "70" else le
+          print ("".join(w.ljust(45) for w in [k, v]))
 
-    # with open("pods_90.json", "w+") as fh:
-        # json.dump(r, fh)
-   
-    pairs = []
-    pairs.append(["sum", "SUM"])
-    pairs.append(["pods", "LIST"])    
-    pairs.append(["pods", "PATCH"])
-    pairs.append(["configmaps", "LIST"])
-    
+def main():    
     latencies = ["0", "25", "50", "250", "400"]
     
-    #generate_cdfs(pairs, latencies, "cdf")
-
     shdb_list = []
     for l in latencies:
         path = os.path.join("hdb", "hdb_" + l + "ms.json")
         shdb_list.append({
             "latency": l,
-            "shdb": parse_hdb(path)
-            })
-    
-    draw_cdf_from_hdb(shdb_list)
-    #print_reached_100p_at(shdb)
+            "shdb": parse_hdb(path)})
+     
+    oo_list = []
+    for shdb in shdb_list:
+        oo_list.append(
+                get_reached_100p_ordered(shdb["shdb"])
+                )
+
+    print_reached_100p_at(oo_list)
 
 main()
