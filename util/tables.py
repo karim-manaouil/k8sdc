@@ -328,32 +328,31 @@ def draw_cdf_from_hdb(shdb_list):
     for d in alld:
         draw_cdfs([d["resource"], d["verb"]], d["ys"])
 
-def print_hdb_compare(shdb, resource, verb, latencies):
-    for le in shdb[0]["shdb"][res][verb]:
-        vs = []
-        for latency in latencies:
-            vs.append(str(shdb[str(latency)]["shdb"][res][verb][le]))
-
-        for v in vs:
-          k = "+Inf" if le == "70" else le
-          print ("".join(w.ljust(45) for w in [k, v]))
-
 def main():    
     latencies = ["0", "25", "50", "250", "400"]
     
-    shdb_list = []
-    for l in latencies:
-        path = os.path.join("hdb", "hdb_" + l + "ms.json")
-        shdb_list.append({
-            "latency": l,
-            "shdb": parse_hdb(path)})
-     
-    oo_list = []
-    for shdb in shdb_list:
-        oo_list.append(
-                get_reached_100p_ordered(shdb["shdb"])
-                )
+    for client in ["kubelet", "scheduler", "all"]:
+        shdb_list = []
+        for l in latencies:
+            path = os.path.join("by_client", client, "hdb_" + l + "ms.json")
+            if not os.path.exists(path):
+                continue
+            shdb_list.append({
+                "latency": l,
+                "shdb": parse_hdb(path)})
 
-    print_reached_100p_at(oo_list)
+
+        oo_list = []
+        for shdb in shdb_list:
+            oo_list.append(
+                    get_reached_100p_ordered(shdb["shdb"])
+                    )
+
+        sw = 0; res="pods"; verb="LIST";
+        if sw == 1:
+            print_reached_100p_at(oo_list)
+        else:
+            y = generate_cdf_from_hdb(shdb_list, res, verb)
+            draw_cdfs([res, verb + " " + client], y)
 
 main()
