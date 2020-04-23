@@ -202,6 +202,10 @@ main() {
                 CLIENT=$2
                 shift 2
                 ;;
+            --prometheus)
+                PPATH=$2
+                shift 2
+                ;;
             *)
                echo "unknown option $1"
                exit 1 
@@ -228,6 +232,12 @@ main() {
 
             group_by_client "$CLIENT" "$hdb" > "$path/$new_hdb"
         done
+    fi
+
+    if [[ -v PPATH ]]; then
+        docker run --rm -p 9090:9090 -uroot -v $PPATH:/prometheus prom/prometheus \
+            --config.file=/etc/prometheus/prometheus.yml \
+            --storage.tsdb.path=/prometheus
     fi
 }
 
