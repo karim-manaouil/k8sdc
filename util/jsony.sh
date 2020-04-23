@@ -156,7 +156,7 @@ api_latency_cdf() {
 }
 
 get_hdb_query() {
-    local q="sum by (le,resource,verb) (apiserver_request_duration_seconds_bucket)"
+    local q="sum by (le,component,resource,verb) (apiserver_request_duration_seconds_bucket)"
 
     echo $q
 }
@@ -165,6 +165,13 @@ get_hdb_query() {
 get_hdb_of() {
     query=$(get_hdb_query)
     exec_query $1
+}
+
+# $1: client
+# $2: hdb
+group_by_client() {
+    jq <$2 \
+        ".data.result=[.data.result[] | select(.metric.component | contains(\"$1\"))]"
 }
 
 main() {
@@ -187,9 +194,13 @@ main() {
                 shift 1
                 ;;
 
-           --cdf)
+            --cdf)
                 CDF=1
                 shift 1
+                ;;
+            --by-client)
+                CLIENT=$2
+                shift 2
                 ;;
             *)
                echo "unknown option $1"
@@ -207,6 +218,16 @@ main() {
 
     if [[ $TOPK -ne 0 ]]; then
         get_topk_req_count $PORT $TOPK > "top$TOPK""_""${NamesMap[$PORT]}count.json"
+    fi
+
+    if [[ -v CLIENT ]]; then 
+        for hdb in ./by_client/all/*; do
+            path="./by_client/$CLIENT"
+            new_hdb=$(basename $hdb)
+            [ ! -d "$path" ] && mkdir -p $path
+
+            group_by_client "$CLIENT" "$hdb" > "$path/$new_hdb"
+        done
     fi
 }
 
