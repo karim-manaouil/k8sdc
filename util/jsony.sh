@@ -8,6 +8,8 @@ NamesMap[9094]="50ms"
 NamesMap[9098]="250ms"
 NamesMap[9012]="400ms"
 
+TMP_SSHFS="/tmp/vvvvvvvvvvvvsshfs"
+
 declare query
 
 urlencode() {
@@ -174,6 +176,54 @@ group_by_client() {
         ".data.result=[.data.result[] | select(.metric.component | contains(\"$1\"))]"
 }
 
+# $1: master ip
+# $2: db name
+dump_prometheus_snapshot() {
+    SNAPSHOT_URL_B64="aHR0cDovL2xvY2FsaG9zdDo4MDAxL2FwaS92MS9uYW1lc3BhY2VzL21vb\
+        ml0b3Jpbmcvc2VydmljZXMvaHR0cDpwcm9tZXRoZXVzLWs4czo5MDkwL3Byb3h5L2FwaS92\
+        MS9hZG1pbi90c2RiL3NuYXBzaG90Cg=="
+
+    SNAPSHOT_URL=$(echo "$SNAPSHOT_URL_B64" | sed 's/ //g' | base64 --decode)
+
+    snapshot_resp=$(ssh root@$1 "curl -s -X POST $SNAPSHOT_URL")
+    code=$(echo $snapshot_resp | jq '.status')
+    
+    printf "Trying to generate snapshot" 
+    while true; do
+        if [[ $code == *"success"* ]]; then
+            break
+        fi
+        printf "."
+        snapshot_resp=$(ssh root@$1 curl -s -X POST $SNAPSHOT_URL)
+        code=$(echo $snapshot_resp | jq '.status') 
+    done
+
+    snapshot_id=$(echo $snapshot_resp | jq '.data.name')
+    printf "\nGenerated snapshot $snapshot_id\n"
+
+    POD="pod/prometheus-k8s-0"
+    get_db_host="kubectl describe -n monitoring $POD | grep -E \"^Node:\" | awk '{print \$2}' | cut -d\"/\" -f 2"
+    db_host=$(ssh root@$1 "$get_db_host")
+
+    set +e
+    mkdir -p $TMP_SSHFS
+    
+    echo "mounting remote TSDB host"
+    r=$(sshfs root@$db_host:/tmp/prometheus-db/snapshots/ $TMP_SSHFS)
+    snapshot_id="${snapshot_id%\"}"
+    snapshot_id="${snapshot_id#\"}"
+    
+    pushd $TMP_SSHFS
+    tar cvjf $2 $snapshot_id
+    popd
+
+    sudo umount $TMP_SSHFS
+    rmdir $TMP_SSHFS
+    set -e
+
+    printf "Generated tarball $2 for prometheus snapshot $snapshot_id\n" 
+}
+
 main() {
     TOPK=0
     HDB=0
@@ -183,12 +233,10 @@ main() {
                 PORT=$2 
                 shift 2
                 ;;
-
             --topk)
                 TOPK=$2
                 shift 2
                 ;;
-            
             --hdb)
                 HDB=1
                 shift 1
@@ -206,13 +254,19 @@ main() {
                 PPATH=$2
                 shift 2
                 ;;
+            --snapshot)
+                SNAPSHOT=$2
+                shift 2
+                ;;
+            --output)
+                OUTPUT=$2
+                shift 2
+                ;;
             *)
                echo "unknown option $1"
                exit 1 
         esac                                
     done   
-    
-    echo $CDF $TOPK $PORT 
 
     [[ $HDB -eq 1 ]] && get_hdb_of $PORT >> "hdb_${NamesMap[$PORT]}.json"
 
@@ -235,9 +289,13 @@ main() {
     fi
 
     if [[ -v PPATH ]]; then
-        docker run --rm -p 9090:9090 -uroot -v $PPATH:/prometheus prom/prometheus \
+        docker run --rm -p 9090:9090 -uroot -v $PWD/$PPATH:/prometheus prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
             --storage.tsdb.path=/prometheus
+    fi
+
+    if [[ -v SNAPSHOT ]]; then
+        dump_prometheus_snapshot $SNAPSHOT $OUTPUT
     fi
 }
 
