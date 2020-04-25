@@ -157,16 +157,27 @@ api_latency_cdf() {
 	done	
 }
 
+# $1: component
 get_hdb_query() {
-    local q="sum by (le,component,resource,verb) (apiserver_request_duration_seconds_bucket)"
+    if [[ -z $1 ]]; then
+        comp=""
+        by=""
+    else
+        comp="{component=\"$1\"}"
+        by="component"
+    fi
 
+    local q="sum by ($by,le,resource,verb) (apiserver_request_duration_seconds_bucket$comp)"
+   
     echo $q
 }
 
-# $1: port
+# $1: component
+# $2: port
 get_hdb_of() {
-    query=$(get_hdb_query)
-    exec_query $1
+    query=$(get_hdb_query $1)
+    echo "$query"
+    exec_query $2
 }
 
 # $1: client
@@ -224,6 +235,36 @@ dump_prometheus_snapshot() {
     printf "Generated tarball $2 for prometheus snapshot $snapshot_id\n" 
 }
 
+dump_victoria_metrics_snapshot() {
+    SNAPSHOT_URL="http://localhost:8428/snapshot/create"
+
+    snapshot_resp=$(ssh root@$1 "curl -s $SNAPSHOT_URL")
+    code=$(echo $snapshot_resp | jq '.status')
+    
+    printf "Trying to generate snapshot" 
+    while true; do
+        if [[ $code =~ "ok" ]]; then
+            break
+        fi
+        printf "."
+        snapshot_resp=$(ssh root@$1 curl -s $SNAPSHOT_URL)
+        code=$(echo $snapshot_resp | jq '.status') 
+    done
+
+    snapshot_id=$(echo $snapshot_resp | jq '.snapshot')
+    printf "\nGenerated snapshot $snapshot_id\n"
+    
+    r=$(ssh root@$1 "/victoria/vmbackup -storageDataPath=/victoria/data \
+        -snapshotName=$snapshot_id -dst=fs:///victoria/backup")
+ 
+    r=$(ssh root@$1 "cd /victoria && zip -r backup.zip backup")
+
+    tarball="$2_$(date +%Y_%m_%d_T%H_%M).zip"
+    r=$(scp root@$1:/victoria/backup.zip ./$tarball)
+
+    printf "Generated tarball $tarball for VictoriaMetrics snapshot $snapshot_id\n"  
+}
+
 main() {
     TOPK=0
     HDB=0
@@ -241,7 +282,10 @@ main() {
                 HDB=1
                 shift 1
                 ;;
-
+            --component)
+                COMP=$2
+                shift 2
+                ;;
             --cdf)
                 CDF=1
                 shift 1
@@ -254,8 +298,16 @@ main() {
                 PPATH=$2
                 shift 2
                 ;;
-            --snapshot)
-                SNAPSHOT=$2
+            --victoria)
+                VMPATH=$2
+                shift 2
+                ;;
+            --prom-snapshot)
+                PROM_SNAPSHOT=$2
+                shift 2
+                ;;
+            --vm-snapshot)
+                VM_SNAPSHOT=$2
                 shift 2
                 ;;
             --output)
@@ -268,7 +320,7 @@ main() {
         esac                                
     done   
 
-    [[ $HDB -eq 1 ]] && get_hdb_of $PORT >> "hdb_${NamesMap[$PORT]}.json"
+    [[ $HDB -eq 1 ]] && get_hdb_of $COMP $PORT #>> "hdb_$COMP_${NamesMap[$PORT]}.json"
 
     if [[ $CDF -eq 1 ]]; then 
         api_latency_cdf $PORT
@@ -289,13 +341,27 @@ main() {
     fi
 
     if [[ -v PPATH ]]; then
-        docker run --rm -p 9090:9090 -uroot -v $PWD/$PPATH:/prometheus prom/prometheus \
+        docker run --env GOGC=80 --rm -p 9090:9090 -uroot -v "$PWD/$PPATH":"/prometheus" prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
             --storage.tsdb.path=/prometheus
+
+    elif [[ -v VMPATH ]]; then
+        cp $VMPATH victoria
+        pushd victoria
+        unzip `basename $VMPATH`
+        ./vmrestore -src=fs://$PWD/backup -storageDataPath=$PWD/data
+        ./victoria-bin -storageDataPath $PWD/data
+        rm -rf backup data
+        rm `basename $VMPATH`
+        popd
     fi
 
-    if [[ -v SNAPSHOT ]]; then
-        dump_prometheus_snapshot $SNAPSHOT $OUTPUT
+    if [[ -v PROM_SNAPSHOT ]]; then
+        dump_prometheus_snapshot $PROM_SNAPSHOT $OUTPUT
+    fi
+
+    if [[ -v VM_SNAPSHOT ]]; then
+        dump_victoria_metrics_snapshot $VM_SNAPSHOT $OUTPUT
     fi
 }
 
