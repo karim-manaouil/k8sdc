@@ -156,32 +156,6 @@ def get_cdf_of(resource, verb, path):
 
         return x, y, count
 
-def draw_cdfs(pair, ys): 
-    for y in ys:
-        # making the graph look better
-        for p in range(99, 70, -1):
-            if p < y["y"][0]:
-                y["y"].insert(0, p)
-                y["x"].insert(0, y["x"][0])
-
-        plt.plot(y["x"], y["y"], label = y["latency"] + "ms")
-    
-    plt.xlabel('Durations (s)')
-    plt.ylabel('Percentage')
-    plt.title('api request duration CDF of ' + pair[0] + " " + pair[1])
-
-    import numpy as np
-    
-    #plt.xticks(np.arange(70, 100, 1)) 
-    #plt.ylim([90, 100.5])
-
-    # plt.yticks(np.arange(90, 100, 1))
-
-    plt.legend()
-    plt.show()
-    
-    #plt.savefig(pair[0] + "_" + pair[1] + ".png", dpi=1000)
-
 def draw_histograms(pair, ys):
     x = np.arange(len(ys[0]["x"]))
 
@@ -224,32 +198,6 @@ def generate_cdfs(pairs, latencies, path):
         draw_cdfs(pair, ys)
         #draw_histograms(pair, ys)
 
-
-# Histograms database parser.
-# This generates a map of resources to (a map 
-# of verbs to (a map of "le" to (values)))
-def parse_hdb(path):
-    shdb = {} # resources map
-    
-    with open(path, "r") as f:
-        hdb = json.load(f)
-
-        for o in hdb["data"]["result"]:
-            res = o["metric"]["resource"]
-            verb = o["metric"]["verb"]
-            le  = o["metric"]["le"]
-            
-            if res not in shdb:
-                shdb[res] = {}
-
-            if verb not in shdb[res]:
-                shdb[res][verb] = {}
-
-            shdb[res][verb]["70" if le == "+Inf" else le] \
-                    = o["value"][1]
-            
-    return shdb
-
 #
 # returns (le, count)
 # 
@@ -291,6 +239,36 @@ def print_reached_100p_at(oo_list):
 
         print ("%-50s %-10s %-10s %-10s %-10s %-10s" % (concat[0], concat[1], concat[2], concat[3], concat[4], concat[5]))
 
+# Histograms database parser.
+# This generates a map of resources to (a map 
+# of verbs to (a map of "le" to (values)))
+def parse_hdb(path):
+    shdb = {} # resources map
+    
+    with open(path, "r") as f:
+        hdb = json.load(f)
+
+        for o in hdb["data"]["result"]:
+            if "resource" in o["metric"]:
+                res = o["metric"]["resource"]
+                verb = o["metric"]["verb"]
+            else:
+                res = "all"
+                verb = "all"
+
+            le  = o["metric"]["le"]
+            
+            if res not in shdb:
+                shdb[res] = {}
+
+            if verb not in shdb[res]:
+                shdb[res][verb] = {}
+
+            ln = len(o["values"])
+            shdb[res][verb]["70" if le == "+Inf" else le] \
+                    = o["values"][ln-1][1]  # Get the latest value
+    return shdb
+
 def generate_cdf_from_hdb(shdb_list, res, verb):
     ys = []
     formatN = lambda n: n if n%1 else int(n)
@@ -300,9 +278,9 @@ def generate_cdf_from_hdb(shdb_list, res, verb):
                 verb not in entry["shdb"][res]:
                     continue
 
-        m = entry["shdb"][res][verb]                         
-        T = float(m["70"])
-        x = [str(formatN(l)) for l in [k for k in sorted([float(j) for j in m.keys()])]]
+        m = entry["shdb"][res][verb] # map[le]val                         
+        T = float(m["70"]) # Total requests
+        x = [str(formatN(l)) for l in [k for k in sorted([float(j) for j in m.keys()])]] # Ordered list of buckets
         y = [ float(m[k])/T*100 for k in x]
         
         ys.append({
@@ -313,6 +291,23 @@ def generate_cdf_from_hdb(shdb_list, res, verb):
             })
 
     return ys
+
+def draw_cdfs(pair, ys): 
+    for y in ys:
+        # making the graph look better
+        for p in range(99, 70, -1):
+            if p < y["y"][0]:
+                y["y"].insert(0, p)
+                y["x"].insert(0, y["x"][0])
+
+        plt.plot(y["x"], y["y"], label = y["latency"] + "ms")
+    
+    plt.xlabel('Durations (s)')
+    plt.ylabel('Percentage')
+    plt.title('api request duration CDF of ' + pair[0] + " " + pair[1])
+    
+    plt.legend()
+    plt.show()
 
 def draw_cdf_from_hdb(shdb_list):
     alld = []
@@ -330,29 +325,35 @@ def draw_cdf_from_hdb(shdb_list):
 
 def main():    
     latencies = ["0", "25", "50", "250", "400"]
+   
+    if len(sys.argv) < 3:
+        print("missing argument")
+        sys.exit(1)
+
+    client = sys.argv[1]
+    mode = "all" if sys.argv[2]=="all" else "hdb"
+     
+    shdb_list = [] 
+    for lat in latencies:
+        hdb_path = os.path.join("hdb", lat, client, mode + ".json")
+        shdb_list.append(parse_hdb(hdb_path))
+
+
+    if mode == "all":
+        daw_cdfs(["all", "all"],
+                generate_cdf_from_hdb(shdb_list, "all", "all"))
     
-    for client in ["kubelet", "scheduler", "all"]:
-        shdb_list = []
-        for l in latencies:
-            path = os.path.join("by_client", client, "hdb_" + l + "ms.json")
-            if not os.path.exists(path):
-                continue
-            shdb_list.append({
-                "latency": l,
-                "shdb": parse_hdb(path)})
+    elif mode == "hdb":
+        sw=sys.argv[3]
+        if sw == 0:
+            oo_list = []
+            for shdb in shdb_list:
+                oo_list.append(
+                        get_reached_100p_ordered(shdb["shdb"]))
 
+             print_reached_100p_at(oo_list)
 
-        oo_list = []
-        for shdb in shdb_list:
-            oo_list.append(
-                    get_reached_100p_ordered(shdb["shdb"])
-                    )
-
-        sw = 0; res="pods"; verb="LIST";
-        if sw == 1:
-            print_reached_100p_at(oo_list)
-        else:
-            y = generate_cdf_from_hdb(shdb_list, res, verb)
-            draw_cdfs([res, verb + " " + client], y)
-
+        else: # (res, verb)
+            daw_cdfs([sys.agrv[4], sys.argv[5]], 
+                    generate_cdf_from_hdb(shdb_list, sys.argv[4], sys.argv[5]))    
 main()
