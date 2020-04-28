@@ -12,6 +12,9 @@ TMP_SSHFS="/tmp/vvvvvvvvvvvvsshfs"
 
 declare query
 
+START="2020-04-27T2:00:30.781Z"
+END="2020-04-27T6:50:30.781Z"
+
 urlencode() {
 	echo "$@" | \
 		python3 -c "import sys; import urllib.parse; print(urllib.parse.quote(sys.stdin.read()))"
@@ -21,8 +24,8 @@ urlencode() {
 # $query is a global variable
 exec_query() {
 	local equery=$(urlencode $query)
-	curl -X GET -s \
-		"http://localhost:$1/api/v1/query?query=$equery&time=$(date +%s)" && echo
+	curl -s \
+		"http://localhost:$1/api/v1/query_range?query=$equery&start=$START&end=$END" && echo
 }
 
 # apiserver_request_error_rate (per minute)
@@ -80,7 +83,7 @@ get_api_req_percns() {
 	for percn in ${percn_list[@]}; do
 		query=$(get_percn_query $percn $2)
 		postfix=$(echo $percn | sed 's/0.//')
-		exec_query $1 > "out/${NamesMap[$1]}""_percn_"$postfix".json" 
+		exec_query $1 
 
 	done	
 }
@@ -91,8 +94,8 @@ api_latency() {
 	mkdir -p out
 	for cluster in ${clusters[@]}; do
 		get_api_req_percns $cluster $range
-		get_api_error_rate $cluster $range > "out/${NamesMap[$cluster]}""_error.json"
-		get_api_req_rate $cluster $range   > "out/${NamesMap[$cluster]}""_rate.json"
+		get_api_error_rate $cluster $range 
+		get_api_req_rate $cluster $range   
 	done
 }
 
@@ -120,9 +123,18 @@ get_cdf_query() {
 	echo $q
 }
 
+# $1: by component ?
 get_sum_cdf_query() {
-	local q="sum by (le) (apiserver_request_duration_seconds_bucket)"
+    if [[ -z $1 ]]; then
+        comp=""
+        by=""
+    else
+        comp="{component=\"$1\"}"
+        by="component"
+    fi
 
+    local q="sum by ($by,le) (apiserver_request_duration_seconds_bucket$comp)"
+   
 	echo $q
 
 }
@@ -153,39 +165,33 @@ api_latency_cdf() {
 		else
 			query=$(get_cdf_query $resource $verb)
 		fi
-		exec_query $1 > "$path/$resource/$verb"".json"
+		exec_query $1 
 	done	
 }
 
-# $1: component
+# $1: groupby
+# $2: filter
 get_hdb_query() {
-    if [[ -z $1 ]]; then
-        comp=""
-        by=""
-    else
-        comp="{component=\"$1\"}"
-        by="component"
-    fi
-
-    local q="sum by ($by,le,resource,verb) (apiserver_request_duration_seconds_bucket$comp)"
+    local q="sum by $1 (apiserver_request_duration_seconds_bucket$2)"
    
     echo $q
 }
 
-# $1: component
-# $2: port
+# $1: port
+# $2: groupby
+# $3: filter
 get_hdb_of() {
-    query=$(get_hdb_query $1)
-    echo "$query"
+    query=$(get_hdb_query $2 $3)
+    exec_query $1
+}
+
+# $1: group
+# $2: port
+get_all_of() {
+    query=$(get_all_query $1)
     exec_query $2
 }
 
-# $1: client
-# $2: hdb
-group_by_client() {
-    jq <$2 \
-        ".data.result=[.data.result[] | select(.metric.component | contains(\"$1\"))]"
-}
 
 # $1: master ip
 # $2: db name
@@ -234,7 +240,8 @@ dump_prometheus_snapshot() {
 
     printf "Generated tarball $2 for prometheus snapshot $snapshot_id\n" 
 }
-
+# $1: master
+# $2: output
 dump_victoria_metrics_snapshot() {
     SNAPSHOT_URL="http://localhost:8428/snapshot/create"
 
@@ -282,17 +289,17 @@ main() {
                 HDB=1
                 shift 1
                 ;;
-            --component)
-                COMP=$2
+            --filter)
+                FILTER=$2
+                shift 2
+                ;;
+            --group-by)
+                GROUPBY=$2
                 shift 2
                 ;;
             --cdf)
                 CDF=1
                 shift 1
-                ;;
-            --by-client)
-                CLIENT=$2
-                shift 2
                 ;;
             --prometheus)
                 PPATH=$2
@@ -320,26 +327,18 @@ main() {
         esac                                
     done   
 
-    [[ $HDB -eq 1 ]] && get_hdb_of $COMP $PORT #>> "hdb_$COMP_${NamesMap[$PORT]}.json"
+    if [[ $HDB -eq 1 ]]; then
+        get_hdb_of $PORT $GROUPBY $FILTER       
+    fi
 
     if [[ $CDF -eq 1 ]]; then 
         api_latency_cdf $PORT
     fi
 
     if [[ $TOPK -ne 0 ]]; then
-        get_topk_req_count $PORT $TOPK > "top$TOPK""_""${NamesMap[$PORT]}count.json"
+        get_topk_req_count $PORT $TOPK 
     fi
-
-    if [[ -v CLIENT ]]; then 
-        for hdb in ./by_client/all/*; do
-            path="./by_client/$CLIENT"
-            new_hdb=$(basename $hdb)
-            [ ! -d "$path" ] && mkdir -p $path
-
-            group_by_client "$CLIENT" "$hdb" > "$path/$new_hdb"
-        done
-    fi
-
+ 
     if [[ -v PPATH ]]; then
         docker run --env GOGC=80 --rm -p 9090:9090 -uroot -v "$PWD/$PPATH":"/prometheus" prom/prometheus \
             --config.file=/etc/prometheus/prometheus.yml \
