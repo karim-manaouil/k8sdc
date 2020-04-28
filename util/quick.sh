@@ -19,6 +19,7 @@ run_query() {
     ./jsony.sh --port 8428 --hdb --group-by $1 --filter $2
 }
 
+# $1: latency
 generate_hdb_for_comps(){
     for comp in ${COMPS[@]}; do
         prefix=$(echo $comp | tr '[:upper:]' '[:lower:]')
@@ -54,12 +55,14 @@ done
 
 }
 
-
-if [[ $# -ne 1 ]]; then
-    echo "Provide \$1 please"
-    exit 1
-fi
-
-print_percn_table && echo
-#generate_hdb_for_comps $1
-    
+case $1 in
+    --generate)
+        generate_hdb_for_comps $2
+        ;;
+    --get-percn)
+        print_percn_table && echo
+        ;;
+    *)
+        echo "unknown option $1"
+        exit 1
+esac    
