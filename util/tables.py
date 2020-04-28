@@ -323,6 +323,7 @@ def draw_cdf_from_hdb(shdb_list):
     for d in alld:
         draw_cdfs([d["resource"], d["verb"]], d["ys"])
 
+# ./tables.py CLIENT MODE={all|hdb} SW={0/table|1/cdf} [RESOURCE VERB]
 def main():    
     latencies = ["0", "25", "50", "250", "400"]
    
@@ -336,24 +337,22 @@ def main():
     shdb_list = [] 
     for lat in latencies:
         hdb_path = os.path.join("hdb", lat, client, mode + ".json")
-        shdb_list.append(parse_hdb(hdb_path))
+        shdb_list.append({"latency": lat, 
+                "shdb":parse_hdb(hdb_path)})
+         
+    sw=sys.argv[3]
+    if sw == "0":
+        oo_list = []
+        for shdb in shdb_list:
+            oo_list.append(
+                    get_reached_100p_ordered(shdb["shdb"]))
 
+        print_reached_100p_at(oo_list)
 
-    if mode == "all":
-        daw_cdfs(["all", "all"],
-                generate_cdf_from_hdb(shdb_list, "all", "all"))
-    
-    elif mode == "hdb":
-        sw=sys.argv[3]
-        if sw == 0:
-            oo_list = []
-            for shdb in shdb_list:
-                oo_list.append(
-                        get_reached_100p_ordered(shdb["shdb"]))
+    else: # (res, verb)
+        res = "all" if mode=="all" else sys.argv[4]
+        verb = "all" if mode=="all" else sys.argv[5]
 
-             print_reached_100p_at(oo_list)
-
-        else: # (res, verb)
-            daw_cdfs([sys.agrv[4], sys.argv[5]], 
-                    generate_cdf_from_hdb(shdb_list, sys.argv[4], sys.argv[5]))    
+        draw_cdfs([res, verb], 
+                generate_cdf_from_hdb(shdb_list, res, verb))    
 main()
