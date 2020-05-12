@@ -1,0 +1,144 @@
+---
+- name: Preparing Environement
+  hosts: kube-master
+  tasks:
+          - name: Fetch Go
+            get_url:
+                    url: https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
+                    dest: /root
+
+          - name: Extract Go
+            shell: tar -C /usr/local -xzf go1.13.8.linux-amd64.tar.gz 
+            args:
+                    chdir: /root/
+
+          - name: Mutating Path
+            shell: echo "export PATH=$PATH:/usr/local/go/bin;export GOPATH=/root/go;export GOBIN=/root/go/bin" >> /root/.bashrc
+           
+          - name: Mutating Path Again
+            shell: echo 'export IP=$(echo $HOSTNAME | sed "s/-/./g" | sed "s/virtual/10/")' >> /root/.bashrc
+
+          - name: Fetching perf-tests 
+            shell: go get k8s.io/perf-tests || echo                
+
+          - name: Extracting cl2
+            shell: unzip cl2.zip
+            args:
+                    chdir: /root/
+                
+          - name: Moving cl2 to GOAPTH
+            shell: rm -rf /root/go/src/k8s.io/perf-tests/clusterloader2/; mv clusterloader2 /root/go/src/k8s.io/perf-tests/ 
+            args:
+                    chdir: /root/
+
+          - name: Fetch master endpoints 
+            get_url:
+                    url: http://public.nantes.grid5000.fr/~kmanaouil/patches/master-endpoints.yaml
+                    dest: /root
+
+          - name: Copying master endpoints
+            shell: mv master-endpoints.yaml /root/go/src/k8s.io/perf-tests/clusterloader2/pkg/prometheus/manifests/master-ip/master-endpoints.yaml
+            args:
+                    chdir: /root/
+               
+          # Scheduler
+          - name: Fetch patched kube-scheduler
+            get_url:
+                    url: http://public.nantes.grid5000.fr/~kmanaouil/patches/kube-scheduler.tar 
+                    dest: /root
+
+          - name: Loading patched image into Docker
+            shell: docker image load < kube-scheduler.tar 
+            args:
+                    chdir: /root/
+
+          - name: Killing existing kube-scheduler
+            shell: kubectl exec -n kube-system $(kubectl get pods -n kube-system | grep scheduler | awk '{print $1}') -- sh -c "kill 1"
+        
+          # Controller
+          - name: Fetch patched kube-controller-manager
+            get_url:
+                    url: http://public.nantes.grid5000.fr/~kmanaouil/patches/kube-controller-manager.tar 
+                    dest: /root
+
+          - name: Loading patched image into Docker
+            shell: docker image load <kube-controller-manager.tar 
+            args:
+                    chdir: /root/
+
+          - name: Killing existing kube-controller-manager 
+            shell: kubectl exec -n kube-system $(kubectl get pods -n kube-system | grep controller-manager | awk '{print $1}') -- sh -c "kill 1"
+
+          - name: Fetching clusterloader2 patched binary
+            get_url:
+                    url: http://public.nantes.grid5000.fr/~kmanaouil/patches/clusterloader
+                    dest: /root
+
+          - name: Copying clusterloader2
+            shell: chmod a+x clusterloader && mv clusterloader /root/go/src/k8s.io/perf-tests/clusterloader2 
+            args:
+                    chdir: /root/
+
+          - name: Fetching prometheus-prometheus.yaml 
+            get_url:
+                    url: http://public.nantes.grid5000.fr/~kmanaouil/patches/prometheus-template.yaml
+                    dest: /root
+
+          - name: Generating prometheus-prometheus.yaml from template 
+            shell: cat prometheus-template.yaml | sed "s/X.X.X.X/$IP/" > prometheus-prometheus.yaml
+            args:
+                    chdir: /root/
+
+          - name: Copying prometheus-prometheus.yaml
+            shell: mv prometheus-prometheus.yaml /root/go/src/k8s.io/perf-tests/clusterloader2/pkg/prometheus/manifests 
+            args:
+                    chdir: /root/
+
+          - name: Downloading and Starting VictoriaMetrics 
+            shell: |
+                    mkdir /victoria && cd /victoria
+                    wget http://public.nantes.grid5000.fr/~kmanaouil/patches/victoria
+                    wget http://public.nantes.grid5000.fr/~kmanaouil/patches/vmbackup
+                    chmod a+x victoria
+                    chmod a+x vmbackup
+                    nohup ./victoria -storageDataPath /victoria/data </dev/null >/dev/null 2>&1 &
+
+
+- name: Kubelets and kube-proxy patching 
+  hosts: all
+  tasks:
+          - name: Running patch script 
+            shell: |
+                    systemctl stop kubelet
+                    pkill kube-proxy
+                    wget http://public.nantes.grid5000.fr/~kmanaouil/patches/kube-proxy.tar 
+                    wget http://public.nantes.grid5000.fr/~kmanaouil/patches/kubelet
+                    docker image load < kube-proxy.tar
+                    cp kubelet /usr/local/bin/
+                    systemctl restart kubelet
+            args:
+                    chdir: /root/
+
+
+
+- name: Apiserver patching
+  hosts: kube-master
+  tasks:
+          # Apiserver
+          - name: Fetch patched kube-apiserver
+            get_url:
+                    url: http://public.nantes.grid5000.fr/~kmanaouil/patches/kube-apiserver.tar 
+                    dest: /root
+
+          - name: Loading patched image into Docker
+            shell: docker image load < kube-apiserver.tar 
+            args:
+                    chdir: /root/
+
+          - name: Waiting for the master kubelet to be running again
+            wait_for:
+                port: 10250
+
+          - name: Killing existing kube-apiserver
+            shell: kubectl exec -n kube-system $(kubectl get pods -n kube-system | grep apiserver | awk '{print $1}') -- sh -c "kill 1"
+

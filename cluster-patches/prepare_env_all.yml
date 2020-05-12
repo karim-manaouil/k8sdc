@@ -1,0 +1,7 @@
+---
+- name: Preparing Environement
+  hosts: k8s-cluster
+
+  tasks:
+          - name: Grant SSH access
+            shell: echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsR/YF0kMGXvohh2A6oAh808Ca9vNiE3DKhsHrRsUtULYkZgqaiOwRZkctegZkYrVl8tLqfZIrI8nqJeBH9HjxmzmetzF+8sJp5J3vyw+W4aMwt+yhJ09C6reRSkoIR8CHE5RyxcvxNFRBCHLwi+y900xptRHS+bKn+taHG92ZkYecWFzztOewNLE7o8dRPRAyIGcD7lwaYhmBtx05h5uWX1Xvc4kYSmvxG0RXY6u5guN0aANnoAQ9JhHxd07PGoMgBDaipPdv7U/J8f6nrvdeP8WarWfzD0/qUdzI0K32t+uy5phlo6NQjM7ftsr0mLc1JqJemOg+37I5MG+O0pPN afr0ck@afr0ck" >> /root/.ssh/authorized_keys

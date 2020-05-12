@@ -1,0 +1,9 @@
+---
+- name: Preparing Experimentation Environement
+  hosts: kube-master
+
+  tasks:              
+        - name: Adding prometheus-db-pv     
+          shell: kubectl apply -f 0promdbpv.yaml
+          args:                    
+                chdir: /root/go/src/k8s.io/perf-tests/clusterloader2/
