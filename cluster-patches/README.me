@@ -1,0 +1,6 @@
+The ansible playbooks residing in this directory will be run by enoslib-kubernetes
+at end of deployment to patch various components 
+
+The k8s yaml manifests found in kubeletes are used by ../util/patch-kubelets.sh to
+patch the proxy and configure prometheus to scrap kubelets and proxy components
+found on the worker nodes
