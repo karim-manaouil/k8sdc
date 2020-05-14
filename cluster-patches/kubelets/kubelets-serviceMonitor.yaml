@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: kubelets
+  name: kubelets
+  namespace: monitoring
+spec:
+  selector:
+    k8s-app: kubelets
+  endpoints:
+  - interval: 5s
+    port: kubelet-port
+    scheme: https
+    tlsConfig:
+        insecureSkipVerify: true
+        caFile: "/tmp/ca.crt"
+        certFile: "/tmp/cert.crt"
+        keyFile: "/tmp/cert.key"
+  - interval: 5s
+    port: kubelet
+    path: /metrics/cadvisor
+    scheme: https
+    tlsConfig:
+        insecureSkipVerify: true
+        caFile: "/tmp/ca.crt"
+        certFile: "/tmp/cert.crt"
+        keyFile: "/tmp/cert.key"
+  - interval: 5s
+    port: proxy-port
+    path: /metrics
+    scheme: http

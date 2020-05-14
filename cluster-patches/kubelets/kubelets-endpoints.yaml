@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  namespace: monitoring
+  name: kubelets
+  labels:
+    k8s-app: kubelets
+subsets:
+  - addresses:
+      - ip: 10.144.0.2
+      - ip: 10.144.0.3
+    ports:
+      - name: kubelet-port
+        port: 10250
+      - name: proxy-port
+        port: 10249
