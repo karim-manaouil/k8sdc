@@ -45,6 +45,7 @@ launch_cl2() {
     export MASTER=$HOSTNAME
     export TESTCONFIG=testing/load/config.yaml
 
+    kubectl delete pv prometheus-db-pv
     kubectl apply -f 0promdbpv.yaml
 
     time ./clusterloader --enable-prometheus-server --provider=skeleton \
@@ -88,18 +89,18 @@ done
     fi
 
     if [[ $START -eq 1 ]]; then
-        kubectl create ns monitoring
-        patch_endpoints
         launch_cl2 1>/tmp/cl2 2>/tmp/cl2 &
         
         while true; do
             state=$(kubectl get pods -n monitoring |grep prometheus-k8s-0 | awk '{print $3}')
             if [[ $state =~ Running ]]; then
-                inject_ssl_certs > /tmp/ssl
+                inject_ssl_certs
+                patch_endpoints
                 echo "SSL certificates injected"
                 break
             fi
-            sleep 1
+            echo "waiting for prometheus to be running"
+            sleep 3
         done
     fi
 
@@ -110,6 +111,5 @@ done
     if [[ $CLEAN -eq 1 ]]; then
         pkill patch-kubelets.sh
         pkill clusterloader
-        rm /tmp/cl2
-        rm /tmp/ssl
+        rm /tmp/cl2 
     fi

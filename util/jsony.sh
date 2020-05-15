@@ -12,8 +12,8 @@ TMP_SSHFS="/tmp/vvvvvvvvvvvvsshfs"
 
 declare query
 
-START="2020-04-27T2:00:00.000Z"
-END="2020-04-28T12:00:00.000Z"
+START="2020-05-15T2:00:00.000Z"
+END="2020-05-15T16:00:00.000Z"
 
 urlencode() {
 	echo "$@" | \
@@ -173,13 +173,16 @@ api_latency_cdf() {
 # $2: filter
 # $3: metric !
 get_hdb_query() {
-    if [[ -z $1 ]]; then
-        sum_by="sum by $1"
-    else
-        sum_by=""
-    fi
+    #if [[ -z $1 ]]; then
+    #    sum_by="sum by $1"
+    #else
+    #    sum_by=""
+    #fi
+    
+    sum_by="sum by $1"
 
-    metric=${3:-"apiserver_request_duration_seconds_bucket"}
+    # apiserver_request_duration_seconds_bucket
+    metric=${3:-"client_request_durations_bucket"}
 
     local q="$sum_by ($metric$2)"
       

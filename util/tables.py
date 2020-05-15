@@ -236,8 +236,12 @@ def print_reached_100p_at(oo_list):
                 concat.append(oo[key])
 
         concat.insert(0, key)
-
-        print ("%-50s %-10s %-10s %-10s %-10s %-10s" % (concat[0], concat[1], concat[2], concat[3], concat[4], concat[5]))
+        
+        print ("%-50s " % (concat[0]))
+        for i in range(1, len(concat)):
+            print ("%-10s " % (concat[i]))
+            
+        #print ("%-50s %-10s %-10s %-10s %-10s %-10s" % (concat[0], concat[1], concat[2], concat[3], concat[4], concat[5]))
 
 # Histograms database parser.
 # This generates a map of resources to (a map 
