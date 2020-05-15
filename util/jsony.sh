@@ -24,7 +24,7 @@ urlencode() {
 # $query is a global variable
 exec_query() {
 	local equery=$(urlencode $query)
-	curl -s \
+	curl ${EXTRA:-''} \
 		"http://localhost:$1/api/v1/query_range?query=$equery&start=$START&end=$END" && echo
 }
 
@@ -171,17 +171,27 @@ api_latency_cdf() {
 
 # $1: groupby
 # $2: filter
+# $3: metric !
 get_hdb_query() {
-    local q="sum by $1 (apiserver_request_duration_seconds_bucket$2)"
-   
+    if [[ -z $1 ]]; then
+        sum_by="sum by $1"
+    else
+        sum_by=""
+    fi
+
+    metric=${3:-"apiserver_request_duration_seconds_bucket"}
+
+    local q="$sum_by ($metric$2)"
+      
     echo $q
 }
 
 # $1: port
 # $2: groupby
 # $3: filter
+# $4: metric
 get_hdb_of() {
-    query=$(get_hdb_query $2 $3)
+    query=$(get_hdb_query $2 $3 $4)
     exec_query $1
 }
 
@@ -289,6 +299,10 @@ main() {
                 HDB=1
                 shift 1
                 ;;
+            --metric)
+                METRIC=$2
+                shift 2
+                ;;
             --filter)
                 FILTER=$2
                 shift 2
@@ -321,6 +335,10 @@ main() {
                 OUTPUT=$2
                 shift 2
                 ;;
+            --extra)
+                EXTRA=$2
+                shift 2
+                ;;
             *)
                echo "unknown option $1"
                exit 1 
@@ -328,7 +346,7 @@ main() {
     done   
 
     if [[ $HDB -eq 1 ]]; then
-        get_hdb_of $PORT $GROUPBY $FILTER       
+        get_hdb_of $PORT $GROUPBY $FILTER $METRIC 
     fi
 
     if [[ $CDF -eq 1 ]]; then 

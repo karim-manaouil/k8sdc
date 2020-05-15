@@ -40,7 +40,14 @@
             shell: mv master-endpoints.yaml /root/go/src/k8s.io/perf-tests/clusterloader2/pkg/prometheus/manifests/master-ip/master-endpoints.yaml
             args:
                     chdir: /root/
-               
+           
+          - name: Patching kube-proxy config to bind on 0.0.0.0 
+            shell: |
+                   kubectl get -oyaml cm -n kube-system kube-proxy > kube-proxy-cm.yaml
+                   cat kube-proxy-cm.yaml | sed 's/127.0.0.1:10249/0.0.0.0:10249/g' > new-cm.yaml
+                   kubectl apply -f new-cm.yaml
+                   rm new-cm.yaml
+
           # Scheduler
           - name: Fetch patched kube-scheduler
             get_url:
