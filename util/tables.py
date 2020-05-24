@@ -203,7 +203,12 @@ def generate_cdfs(pairs, latencies, path):
 # 
 def get_reached_100p_rv(shdb, res, verb):
     maxx = shdb[res][verb]["70"]
-    for k in sorted(shdb[res][verb].keys()):
+    keys = shdb[res][verb].keys()
+    
+    formatN = lambda n: n if n%1 else int(n)
+    okeys = [str(formatN(l)) for l in [k for k in sorted([float(j) for j in keys])]] # Ordered list of buckets
+
+    for k in okeys:
             if shdb[res][verb][k] == maxx:
                 return k, shdb[res][verb][k]
 # 
@@ -237,12 +242,12 @@ def print_reached_100p_at(oo_list):
 
         concat.insert(0, key)
         
-        print ("%-50s " % (concat[0]))
+        print("\n%-50s " % (concat[0]), end="")
         for i in range(1, len(concat)):
-            print ("%-10s " % (concat[i]))
-            
-        #print ("%-50s %-10s %-10s %-10s %-10s %-10s" % (concat[0], concat[1], concat[2], concat[3], concat[4], concat[5]))
-
+            print("%-10s " % (concat[i]), end="")
+        
+    print("")
+        
 # Histograms database parser.
 # This generates a map of resources to (a map 
 # of verbs to (a map of "le" to (values)))
@@ -271,6 +276,7 @@ def parse_hdb(path):
             ln = len(o["values"])
             shdb[res][verb]["70" if le == "+Inf" else le] \
                     = o["values"][ln-1][1]  # Get the latest value
+
     return shdb
 
 def generate_cdf_from_hdb(shdb_list, res, verb):
@@ -286,7 +292,7 @@ def generate_cdf_from_hdb(shdb_list, res, verb):
         T = float(m["70"]) # Total requests
         x = [str(formatN(l)) for l in [k for k in sorted([float(j) for j in m.keys()])]] # Ordered list of buckets
         y = [ float(m[k])/T*100 for k in x]
-        
+
         ys.append({
             "latency": entry["latency"],
             "x": x,
@@ -327,10 +333,44 @@ def draw_cdf_from_hdb(shdb_list):
     for d in alld:
         draw_cdfs([d["resource"], d["verb"]], d["ys"])
 
+# selects the pairs that make select(shdb, res, verb)
+# return true. 
+def select_pairs_cond(shdb, arg, selector):
+    selection = []
+    for res in shdb:
+        for verb in shdb[res]:
+            buk, maxx = get_reached_100p_rv(shdb, res, verb)
+            if selector(buk, arg):
+                selection.append([res, verb, buk, maxx])
+
+    return selection
+
+def select_pairs_longer_than(shdb, time):
+    def is_longer(a, b):
+        r = True if (float(a) > float(b)) else False
+        return r
+
+    return \
+            select_pairs_cond(shdb, time, is_longer)
+
+def select_pairs_less_than(shdb, time):
+    def is_less(a, b):
+        r = True if (float(a) <= float(b)) else False
+        return r
+
+    return \
+            select_pairs_cond(shdb, time, is_less)
+
+def print_selection(selection):
+    print("%-30s %-10s %-10s" % ("res/verb", "buckt", "rq"))
+    for s in selection:
+        print("%-30s %-10s %-10s" % (s[0]+"/"+s[1], s[2], s[3]))
+
 # ./tables.py CLIENT MODE={all|hdb} SW={0/table|1/cdf} [RESOURCE VERB]
 def main():    
-    latencies = ["0", "25", "50", "250", "400"]
-   
+    latencies = ["0", "50", "250", "400"]
+    #latencies = ["250"]
+    
     if len(sys.argv) < 3:
         print("missing argument")
         sys.exit(1)
@@ -343,9 +383,10 @@ def main():
         hdb_path = os.path.join("hdb", lat, client, mode + ".json")
         shdb_list.append({"latency": lat, 
                 "shdb":parse_hdb(hdb_path)})
-         
+   
+    # switch
     sw=sys.argv[3]
-    if sw == "0":
+    if sw == "table": # mode=hdb => table
         oo_list = []
         for shdb in shdb_list:
             oo_list.append(
@@ -353,10 +394,26 @@ def main():
 
         print_reached_100p_at(oo_list)
 
-    else: # (res, verb)
+    elif sw == "cdf": # mode=hdb/all [res] [verb] => cdf
         res = "all" if mode=="all" else sys.argv[4]
         verb = "all" if mode=="all" else sys.argv[5]
 
         draw_cdfs([res, verb], 
-                generate_cdf_from_hdb(shdb_list, res, verb))    
+                generate_cdf_from_hdb(shdb_list, res, verb))
+
+    elif sw == "longer" or sw == "less":# mode=hdb [latency] [time]
+        ltoi={"0":0, "50":1, "250":2, "400":3}
+        
+        latency = sys.argv[4]
+        time = sys.argv[5] 
+        
+        shdb = shdb_list[ltoi[latency]]["shdb"]
+        
+        if sw == "longer":
+            s = select_pairs_longer_than(shdb, time)
+        else:
+            s = select_pairs_less_than(shdb, time)
+
+        print_selection(s)        
+
 main()
