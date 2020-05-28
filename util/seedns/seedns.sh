@@ -178,7 +178,7 @@ run_bench() {
 }
 
 destroy_bench() {
-    echo "Destroying bench"
+    kubectl delete ns seedns 
 }
 
 locate_seedns() {
@@ -187,15 +187,14 @@ locate_seedns() {
     printf "%s" $ip
 }
 
-wait_for_bench() {
-    local ip=$(locate_seedns)
-    
+wait_for_bench() {    
     while true; do
+	local ip=$(locate_seedns)
     	local status=$(curl -s $ip:30007/stop)
         if [ "$status" = "true" ]; then
             return 0
         fi
-	printf "."
+	printf "." >&2
 	sleep 5
     done
 }
@@ -210,15 +209,16 @@ gather_series() {
 # $1: type
 run_benchs_for_type() {
     for bench in ${BENCHS[@]}; do
-        echo "Running bench [$1, $bench]"
+    	kubectl create ns seedns
+    	create_probe_nodeport
+        echo "Running bench [$1, $bench]" >&2
         run_bench $1 ${!bench}
-	printf "Waiting for benchmark to finish"
+	echo "Waiting for benchmark to finish" >&2
         wait_for_bench
-	printf "Gathering results"
-        gather_series
+	echo "Gathering results" >&2
+        gather_series > "$1_$bench.res"
+        echo "Bench finished running. Check $1_$bench.res" >&2
         destroy_bench
-        echo "Bench finished running. Waiting 120s..."
-        sleep 120
     done
 }
 
@@ -230,8 +230,6 @@ run_benchs() {
 
 main() {
     init_params
-    kubectl create ns seedns
-    create_probe_nodeport
     run_benchs
 }
 
