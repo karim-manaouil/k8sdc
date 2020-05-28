@@ -111,5 +111,7 @@ done
     if [[ $CLEAN -eq 1 ]]; then
         pkill patch-kubelets.sh
         pkill clusterloader
+        rm -rf k*
+        rm -rf /victoria
         rm /tmp/cl2 
     fi

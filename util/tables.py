@@ -277,6 +277,7 @@ def parse_hdb(path):
             shdb[res][verb]["70" if le == "+Inf" else le] \
                     = o["values"][ln-1][1]  # Get the latest value
 
+    #import pdb; pdb.set_trace()
     return shdb
 
 def generate_cdf_from_hdb(shdb_list, res, verb):
@@ -361,14 +362,33 @@ def select_pairs_less_than(shdb, time):
     return \
             select_pairs_cond(shdb, time, is_less)
 
+def get_pairs_longer_than(shdb, bucket):
+    pairs = []
+    for res in shdb:
+          for verb in shdb[res]:
+              buk, maxx = get_reached_100p_rv(shdb, res, verb)
+              v = shdb[res][verb][bucket]
+              if float(maxx) >= float(v):
+                  pairs.append([res, verb, bucket, 
+                      str(int(maxx) - int(v)), buk, maxx])
+
+    return pairs
+
+def print_pairs(pairs):
+    pairs.sort(key=lambda s: float(s[3]))
+    print("%-30s %-15s %-10s" % ("res/verb", "longer/total", "100%"))
+    for s in pairs:
+        print("%-30s %-15s %-10s" % (s[0]+"/"+s[1], s[3]+"/"+s[5], s[4]))
+
 def print_selection(selection):
+    selection.sort(key=lambda s: float(s[2]))
     print("%-30s %-10s %-10s" % ("res/verb", "buckt", "rq"))
     for s in selection:
         print("%-30s %-10s %-10s" % (s[0]+"/"+s[1], s[2], s[3]))
 
 # ./tables.py CLIENT MODE={all|hdb} SW={0/table|1/cdf} [RESOURCE VERB]
 def main():    
-    latencies = ["0", "50", "250", "400"]
+    latencies = ["0", "50", "250", "400", "1000"]
     #latencies = ["250"]
     
     if len(sys.argv) < 3:
@@ -402,7 +422,7 @@ def main():
                 generate_cdf_from_hdb(shdb_list, res, verb))
 
     elif sw == "longer" or sw == "less":# mode=hdb [latency] [time]
-        ltoi={"0":0, "50":1, "250":2, "400":3}
+        ltoi={"0":0, "50":1, "250":2, "400":3, "1000":4}
         
         latency = sys.argv[4]
         time = sys.argv[5] 
@@ -410,10 +430,10 @@ def main():
         shdb = shdb_list[ltoi[latency]]["shdb"]
         
         if sw == "longer":
-            s = select_pairs_longer_than(shdb, time)
+            s = get_pairs_longer_than(shdb, time)
+            print_pairs(s)
         else:
             s = select_pairs_less_than(shdb, time)
-
-        print_selection(s)        
+            print_selection(s)        
 
 main()

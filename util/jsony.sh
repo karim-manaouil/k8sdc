@@ -13,7 +13,7 @@ TMP_SSHFS="/tmp/vvvvvvvvvvvvsshfs"
 declare query
 
 START="2020-05-15T2:00:00.000Z"
-END="2020-05-15T16:00:00.000Z"
+END="2020-07-15T16:00:00.000Z"
 
 urlencode() {
 	echo "$@" | \
