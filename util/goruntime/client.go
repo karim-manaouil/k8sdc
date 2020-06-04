@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -12,6 +13,7 @@ import (
 )
 
 var avgs [1000]time.Duration
+var avgc [1000]uint
 var mu [1000]sync.Mutex
 
 func sendRequest() {
@@ -24,17 +26,17 @@ func sendRequest() {
 	r := rand.Uint64() % 1000
 
 	mu[r].Lock()
-	avgs[r] = (avgs[r] + elapsed) / 2
+	avgs[r] = avgs[r] + elapsed
+	avgc[r] = avgc[r] + 1
 	mu[r].Unlock()
 
 	/* Make sure Go doesn't optimize this out */
 	if resp.StatusCode == http.StatusOK {
 		defer resp.Body.Close()
-		bytes, _ := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
-		ioutil.WriteFile("/dev/null", bytes, 0644)
+		io.Copy(ioutil.Discard, resp.Body)
 	}
 }
 
@@ -58,7 +60,7 @@ func main() {
 
 	var avg time.Duration = 0
 	for i := 0; i < 1000; i++ {
-		avg = avg + avgs[i]
+		avg = avg + avgs[i]/time.Duration(avgc[i])
 	}
 	log.Printf("Average request duration: %v", avg/1000)
 }
