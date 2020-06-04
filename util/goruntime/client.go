@@ -53,7 +53,7 @@ func main() {
 			}
 		}
 		log.Printf("Cycle %v achived %v/%v throughput\n", cycle, r, R)
-		time.Sleep(1)
+		time.Sleep(time.Second * 1)
 	}
 
 	var avg time.Duration = 0

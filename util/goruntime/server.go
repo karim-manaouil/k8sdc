@@ -7,11 +7,13 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"sync/atomic"
 	"time"
 )
 
 var buffer []byte
 var avg time.Duration = 0
+var totalRequests uint64 = 0
 
 func generateRandList() []byte {
 	le := rand.Uint64() % 10
@@ -35,7 +37,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprintf(w, "!!")
 	}
-
+	atomic.AddUint64(&totalRequests, 1)
 	elapsed := time.Since(start)
 	avg = (avg + elapsed) / 2
 }
@@ -53,6 +55,16 @@ func main() {
 	http.HandleFunc("/serv", httpHandler)
 	http.HandleFunc("/avg", avgHandler)
 
+	status := func() {
+		for {
+			fmt.Printf("Processed %v requests\n", totalRequests)
+			time.Sleep(time.Second * 2)
+		}
+	}
+
+	go status()
+
 	log.Println("Go!")
 	http.ListenAndServe(":8998", nil)
+
 }
