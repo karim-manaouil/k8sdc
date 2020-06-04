@@ -10,13 +10,16 @@ CLUSTER=$'{component!~\'clusterloader.*|Prometheus.*|operator.*\',verb!=\'WATCH\
 MASTER=$'{component=~\'coredns.*|kube-apiserver.*|kube-controller.*|kubectl.*|kube-scheduler.*|cluster-p.*\',verb!=\'WATCH\'}'
 WORKERS=$'{component=~\'kubelet.*|kube-proxy.*|calico.*\',verb!=\'WATCH\'}'
 KUBELETS=$'{component=~\'kubelet.*\',verb!=\'WATCH\'}'
+APISERVER=$'{component=~\'kube-apiserver.*\',verb!=\'WATCH\'}'
+SCHEDULER=$'{component=~\'kube-scheduler.*\',verb!=\'WATCH\'}'
+CONTROLLERS=$'{component=~\'kube-controller.*\',verb!=\'WATCH\'}'
 
-COMPS=('CLUSTER' 'MASTER' 'WORKERS' 'KUBELETS')
+COMPS=('CLUSTER' 'MASTER' 'WORKERS' 'KUBELETS' 'APISERVER' 'SCHEDULER' 'CONTROLLERS')
 
 # $1: groupby
 # $2: component
 run_query() {
-    ./jsony.sh --port 8428 --hdb --group-by $1 --filter $2
+    ./jsony.sh --extra "-s" --port 8428 --hdb --group-by $1 --filter $2
 }
 
 # $1: latency
@@ -25,6 +28,7 @@ generate_hdb_for_comps(){
         prefix=$(echo $comp | tr '[:upper:]' '[:lower:]')
         run_query $GROUP_BY_ALL ${!comp} > hdb/$1/$prefix/"all.json"
         run_query $GROUP_BY_RV ${!comp}  > hdb/$1/$prefix/"hdb.json"
+        echo "Processed (ALL, $prefix) / (RV, $prefix)"
     done
 }
 

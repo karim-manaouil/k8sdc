@@ -315,7 +315,7 @@ def draw_cdfs(pair, ys):
     
     plt.xlabel('Durations (s)')
     plt.ylabel('Percentage')
-    plt.title('api request duration CDF of ' + pair[0] + " " + pair[1])
+    plt.title('request duration CDF of ' + pair[0] + " " + pair[1])
     
     plt.legend()
     plt.show()
@@ -368,7 +368,7 @@ def get_pairs_longer_than(shdb, bucket):
           for verb in shdb[res]:
               buk, maxx = get_reached_100p_rv(shdb, res, verb)
               v = shdb[res][verb][bucket]
-              if float(maxx) >= float(v):
+              if float(maxx) > float(v):
                   pairs.append([res, verb, bucket, 
                       str(int(maxx) - int(v)), buk, maxx])
 
@@ -388,8 +388,8 @@ def print_selection(selection):
 
 # ./tables.py CLIENT MODE={all|hdb} SW={0/table|1/cdf} [RESOURCE VERB]
 def main():    
-    latencies = ["0", "50", "250", "400", "1000"]
-    #latencies = ["250"]
+    #latencies = ["0", "50", "250", "400", "50l", "250l", "400l"]
+    latencies = ["0", "50", "250", "250l"]
     
     if len(sys.argv) < 3:
         print("missing argument")
@@ -418,7 +418,7 @@ def main():
         res = "all" if mode=="all" else sys.argv[4]
         verb = "all" if mode=="all" else sys.argv[5]
 
-        draw_cdfs([res, verb], 
+        draw_cdfs([sys.argv[1] + " " + res, verb], 
                 generate_cdf_from_hdb(shdb_list, res, verb))
 
     elif sw == "longer" or sw == "less":# mode=hdb [latency] [time]

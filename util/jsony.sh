@@ -2,15 +2,9 @@
 
 set +e
 
-NamesMap[9090]="0ms"
-NamesMap[9025]="25ms"
-NamesMap[9094]="50ms"
-NamesMap[9098]="250ms"
-NamesMap[9012]="400ms"
-
-TMP_SSHFS="/tmp/vvvvvvvvvvvvsshfs"
-
 declare query
+
+TMP_SSHFS=$(mktemp)
 
 START="2020-05-15T2:00:00.000Z"
 END="2020-07-15T16:00:00.000Z"
@@ -173,18 +167,7 @@ api_latency_cdf() {
 # $2: filter
 # $3: metric !
 get_hdb_query() {
-    #if [[ -z $1 ]]; then
-    #    sum_by="sum by $1"
-    #else
-    #    sum_by=""
-    #fi
-    
-    sum_by="sum by $1"
-
-    # apiserver_request_duration_seconds_bucket
-    metric=${3:-"client_request_durations_bucket"}
-
-    local q="$sum_by ($metric$2)"
+    local q="client_request_retries"
       
     echo $q
 }
@@ -195,13 +178,14 @@ get_hdb_query() {
 # $4: metric
 get_hdb_of() {
     query=$(get_hdb_query $2 $3 $4)
+    # printf "executing: %s\n" $query 
     exec_query $1
 }
 
 # $1: group
 # $2: port
 get_all_of() {
-    query=$(get_all_query $1)
+    query=$(get_all_query $1)    
     exec_query $2
 }
 
