@@ -18,11 +18,14 @@ var avgb [1000]bool
 
 var mu [1000]sync.Mutex
 
+var IP string
+
 func sendRequest() {
 	start := time.Now()
-	resp, err := http.Get(os.Getenv("SRVIP"))
+	resp, err := http.Get(IP)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
 	elapsed := time.Since(start)
 	r := rand.Uint64() % 1000
@@ -34,40 +37,48 @@ func sendRequest() {
 
 	avgb[r] = true
 
-	/* Make sure Go doesn't optimize this out */
 	if resp.StatusCode == http.StatusOK {
 		defer resp.Body.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
 		io.Copy(ioutil.Discard, resp.Body)
 	}
+
+	goel := time.Since(start)
+	log.Printf("Goroutine took %v\n", goel)
 }
 
 func main() {
-	log.Printf("Using %s as server", os.Getenv("SRVIP"))
-	C, _ := strconv.Atoi(os.Getenv("C"))
-	R, _ := strconv.Atoi(os.Getenv("R"))
-	W, _ := strconv.Atoi(os.Getenv("W"))
+	IP = os.Getenv("SRVIP")
+	log.Printf("Using %s as server", IP)
+	C, _ := strconv.Atoi(os.Getenv("CYCLES"))
+	Q, _ := strconv.Atoi(os.Getenv("QPS"))
+	B, _ := strconv.Atoi(os.Getenv("BREAK"))
+	W, _ := strconv.Atoi(os.Getenv("PAUSE"))
 
 	for cycle := 0; cycle < C; cycle++ {
 		start := time.Now()
 		r := 0
-		for r < R {
+		for r < Q {
 			go sendRequest()
 			r++
 			if (time.Since(start)) > time.Second {
+				log.Println("Break")
 				break
 			}
+			/* Uniform distribution of threads over time */
+			if r%B == 0 {
+				time.Sleep(time.Duration(W) * time.Microsecond)
+			}
 		}
-		log.Printf("Cycle %v achived %v/%v throughput\n", cycle, r, R)
-		time.Sleep(time.Duration(W) * time.Millisecond)
+		/* If we finished in less than a second then we
+		 * have to wait until the second is elapsed */
+		time.Sleep(time.Second - time.Since(start))
+		//log.Printf("Cycle %v achived %v/%v throughput\n", cycle, r, R)
 	}
 
 	var avg time.Duration = 0
 	total := 0
 	for i := 0; i < 1000; i++ {
-		if avgb[i] {
+		if avgb[i] == true {
 			avg = avg + avgs[i]/time.Duration(avgc[i])
 			total = total + 1
 		}
