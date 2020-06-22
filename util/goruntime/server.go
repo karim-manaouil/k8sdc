@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
-	"math/rand"
+	"log"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -17,13 +16,13 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		/* simulates calculation */
-		time.Sleep(time.Duration(rand.Intn(50)) * time.Millisecond)
+		time.Sleep(time.Duration(50) * time.Millisecond)
 		w.Write(buffer)
+		atomic.AddUint64(&totalRequests, 1)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprintf(w, "!!")
+		w.Write([]byte{'!', '!'})
 	}
-	atomic.AddUint64(&totalRequests, 1)
 }
 
 func main() {
@@ -33,7 +32,7 @@ func main() {
 
 	status := func() {
 		for {
-			fmt.Printf("Processed %v requests\n", totalRequests)
+			log.Printf("Processed %v requests\n", totalRequests)
 			time.Sleep(time.Second * 2)
 		}
 	}

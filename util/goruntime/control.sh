@@ -2,9 +2,20 @@
 
 set -e
 
+
+copy_binaries() {
+    scp server "root@$1.2":
+    for i in $(seq 3 12); do
+        scp client "root@$1.$i":
+    done
+}
+
+finish_experiment() {
+    kill $(ps ax  | grep 'of=BigFile.*server' | head -1 | awk '{ print $1 }') 1>/dev/null 2>/dev/null
+    for pid in $(ps ax | grep "pkill client" | awk '{print $1}'); do kill $pid 1>/dev/null 2>/dev/null; done
+}
+
 main() {
-    TOPK=0
-    HDB=0
     while (( $# )); do
         case $1 in
              --server)
@@ -27,21 +38,29 @@ main() {
                 delay=$2
                 shift 2
                 ;;
-            -C)
+            -CYCLES)
                 C=$2
                 shift 2
                 ;;
-            -R)
-                R=$2
+            -QPS)
+                Q=$2
                 shift 2
                 ;;
-            -W)
-                W=$2
+            -BREAK)
+                B=$2
+                shift 2
+                ;;
+            -PAUSE)
+                P=$2
                 shift 2
                 ;;
             --size)
                 size=$2
                 shift 2
+                ;;
+            --copy)
+                copy_binaries $2
+                exit 0
                 ;;
             --clean)
                 CLEAN=1
@@ -50,9 +69,11 @@ main() {
         esac
     done
 
+    echo "Starting experiment"
+    rm -rf 10.*
+
     if [[ $CLEAN -eq 1 ]]; then
-        kill $(ps ax  | grep "of=BigFile.*server" | head -1 | awk '{ print $1 }')
-        rm 10.*
+        finish_experiment
         exit 0
     fi 
 
@@ -77,16 +98,24 @@ main() {
     fi
    
     set +e 
-    kill $(ps ax  | grep "of=BigFile.*server" | head -1 | awk '{ print $1 }')
+        finish_experiment
     set -e
-    $SSH "dd if=/dev/urandom of=BigFile bs=${size:-8192} count=1 && ./server" > "$SERVER.log" 2>&1 &
+    $SSH "dd if=/dev/urandom of=BigFile bs=${size:-8192} count=1 && ./server" 1>log_server 2>&1 &
     echo "Server launched"
 
     # Launching experiment
     for i in `seq 3 12`; do
-        ssh "root@$client.$i" "ulimit -n $((1024*1024)) && sleep 1 && SRVIP=http://$SERVER:8998/serv C=$C R=$R W=$W ./client" > "$client.$i.log" 2>&1 &
-        echo "$client.$i started"
+        ssh "root@$client.$i" "pkill client || ulimit -n $((1024*1024)) && ulimit -a && sleep 1 && SRVIP=http://$SERVER:8998/serv CYCLES=$C QPS=$Q BREAK=$B PAUSE=$P ./client" 1>log_client_$i 2>&1 & 
+        pids[${i}]=$!
     done
+
+    for pid in ${pids[*]}; do
+        wait $pid
+    done
+    
+    sleep 2
+    echo "Finishing experiment"
+    finish_experiment
 }   
 
 main $@
