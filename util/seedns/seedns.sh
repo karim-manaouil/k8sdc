@@ -106,6 +106,8 @@ spec:
   - name: seedns-probe
     image: afr0ck/load:seedns
     imagePullPolicy: Always
+    securityContext:
+        privileged: true
     env:
     - name: seednsROUNDS
       value: "$RVAL"
