@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/sparrc/go-ping"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -13,32 +13,37 @@ import (
 
 var HOSTNAME string
 
-var timeSeries []int64
+var timeSeries []time.Duration
 var tsl sync.Mutex
 
 var errors int
 var stop bool = false
 
 func probeDNS() {
-	var tmpSeries [10]int64
+	var tmpSeries [10]time.Duration
 	HOSTNAME = os.Getenv("seednsHOSTNAME")
 	rounds, _ := strconv.Atoi(os.Getenv("seednsROUNDS"))
 	log.Printf("Running with rounds=%v and hostname=%v\n", rounds, HOSTNAME)
+
 	i := 0
 	r := 0
 	for r < rounds {
-		start := time.Now()
-		_, err := net.LookupIP(HOSTNAME)
+		//ips, err := net.LookupIP(HOSTNAME)
+		pinger, err := ping.NewPinger(HOSTNAME)
+		pinger.SetPrivileged(true)
 		if err != nil {
-			errors++
-			log.Printf("%v\n", err)
-			time.Sleep(time.Second)
-			continue
+			panic(err)
 		}
-		elapsed := time.Since(start)
-		ms := elapsed.Nanoseconds() / 1000000
+		pinger.Count = 1
+		pinger.Run() // blocks until finished
+		stats := pinger.Statistics()
+		if stats.PacketsRecv != 1 {
+			errors++
+			log.Fatal("Host unreachable")
+		}
+		log.Printf("addr=%v rtt=%v\n", pinger.IPAddr(), stats.AvgRtt)
 
-		tmpSeries[i] = ms
+		tmpSeries[i] = stats.AvgRtt
 		i++
 		if i == 10 {
 			tsl.Lock()
