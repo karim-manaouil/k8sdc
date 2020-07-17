@@ -1,0 +1,300 @@
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=1.39135ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=1.204357ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=956.006µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=904.42µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=799.53µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=1.400029ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=750.828µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=913.529µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=779.968µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=665.835µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=741.377µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=669.971µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=669.314µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=568.448µs
+2020/07/12 23:22:27 http elapsed=1.679946ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.414397ms
+2020/07/12 23:22:27 http elapsed=1.408438ms
+2020/07/12 23:22:27 http elapsed=1.966348ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=594.034µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.839617ms
+2020/07/12 23:22:27 http elapsed=1.998508ms
+2020/07/12 23:22:27 http elapsed=1.962234ms
+2020/07/12 23:22:27 http elapsed=2.03265ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=749.826µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=608.226µs
+2020/07/12 23:22:27 http elapsed=1.885918ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=954.816µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=547.039µs
+2020/07/12 23:22:27 http elapsed=1.553326ms
+2020/07/12 23:22:27 http elapsed=1.971188ms
+2020/07/12 23:22:27 http elapsed=1.517951ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.390825ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.541107ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=736.43µs
+2020/07/12 23:22:27 http elapsed=1.234219ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=679.7µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=567.905µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=659.727µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=638.215µs
+2020/07/12 23:22:27 http elapsed=1.412642ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.335047ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=606.97µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=564.888µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.412554ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=691.837µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=453.467µs
+2020/07/12 23:22:27 http elapsed=1.664456ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.482964ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=844.362µs
+2020/07/12 23:22:27 http elapsed=1.527058ms
+2020/07/12 23:22:27 http elapsed=1.617324ms
+2020/07/12 23:22:27 http elapsed=1.156061ms
+2020/07/12 23:22:27 http elapsed=1.031582ms
+2020/07/12 23:22:27 http elapsed=1.044687ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=509.651µs
+2020/07/12 23:22:27 http elapsed=1.240509ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=687.427µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=783.893µs
+2020/07/12 23:22:27 http elapsed=1.489973ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=561.631µs
+2020/07/12 23:22:27 http elapsed=1.68889ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=529.874µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.321656ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=639.473µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=475.836µs
+2020/07/12 23:22:27 http elapsed=1.49688ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=620.311µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=600.534µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.710395ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.745354ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.812574ms
+2020/07/12 23:22:27 http elapsed=1.486198ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=577.694µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=650.119µs
+2020/07/12 23:22:27 http elapsed=1.376873ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=759.899µs
+2020/07/12 23:22:27 http elapsed=1.629027ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=711.343µs
+2020/07/12 23:22:27 http elapsed=1.463842ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=536.921µs
+2020/07/12 23:22:27 http elapsed=1.765607ms
+2020/07/12 23:22:27 http elapsed=1.572623ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=2.186721ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=743.246µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.466266ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.501281ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=603.95µs
+2020/07/12 23:22:27 http elapsed=1.53416ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=522.397µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=664.345µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.853617ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.519253ms
+2020/07/12 23:22:27 http elapsed=1.62212ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.389666ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=753.063µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=675.35µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=872.783µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=765.878µs
+2020/07/12 23:22:27 http elapsed=1.411806ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=602.221µs
+2020/07/12 23:22:27 http elapsed=1.792598ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=760.057µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=648.591µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=616.827µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=554.844µs
+2020/07/12 23:22:27 http elapsed=1.026913ms
+2020/07/12 23:22:27 http elapsed=1.124399ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=592.445µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=567.644µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.580434ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.731734ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.291982ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.742678ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.359913ms
+2020/07/12 23:22:27 http elapsed=1.575624ms
+2020/07/12 23:22:27 http elapsed=1.843851ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=800.17µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=700.101µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=638.573µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=555.683µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=547.494µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.535035ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=641.792µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=740.714µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=757.479µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=756.751µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.733907ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=591.298µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=678.973µs
+2020/07/12 23:22:27 http elapsed=933.837µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=682.715µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.334789ms
+2020/07/12 23:22:27 http elapsed=1.516638ms
+2020/07/12 23:22:27 http elapsed=1.503592ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=557.697µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=501.735µs
+2020/07/12 23:22:27 http elapsed=1.373785ms
+2020/07/12 23:22:27 http elapsed=1.80651ms
+2020/07/12 23:22:27 http elapsed=1.388958ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=530.013µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.372588ms
+2020/07/12 23:22:27 http elapsed=1.741717ms
+2020/07/12 23:22:27 http elapsed=1.76902ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=545.778µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=586.318µs
+2020/07/12 23:22:27 http elapsed=894.787µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.67709ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=728.374µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=512.889µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.199101ms
+2020/07/12 23:22:27 http elapsed=1.483666ms
+2020/07/12 23:22:27 http elapsed=1.607149ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.400395ms
+2020/07/12 23:22:27 http elapsed=1.463081ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=707.584µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=567.098µs
+2020/07/12 23:22:27 http elapsed=1.226863ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.53141ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=770.593µs
+2020/07/12 23:22:27 http elapsed=1.2031ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=736.933µs
+2020/07/12 23:22:27 http elapsed=1.595862ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=595.837µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.588613ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=754.978µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=601.105µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.593811ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.763441ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=940.009µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=729.358µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=614.602µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.666643ms
+2020/07/12 23:22:27 http elapsed=1.663583ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=644.344µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=548.437µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=599.772µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=516.439µs
+2020/07/12 23:22:27 http elapsed=1.538873ms
+2020/07/12 23:22:27 http elapsed=1.205972ms
+2020/07/12 23:22:27 http elapsed=1.528995ms
+2020/07/12 23:22:27 http elapsed=1.014202ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=783.858µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=724.145µs
+2020/07/12 23:22:27 http elapsed=1.010234ms
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 addr=10.233.53.156 time=628.266µs
+2020/07/12 23:22:27 http elapsed=1.476361ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=535.148µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=539.639µs
+2020/07/12 23:22:27 http elapsed=1.381868ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=614.202µs
+2020/07/12 23:22:27 addr=10.233.53.156 time=602.598µs
+2020/07/12 23:22:27 Running with rounds=1 and hostname=nginx
+2020/07/12 23:22:27 http elapsed=1.485201ms
+2020/07/12 23:22:27 http elapsed=1.584089ms
+2020/07/12 23:22:27 http elapsed=1.563663ms
+2020/07/12 23:22:27 addr=10.233.53.156 time=484.23µs
+2020/07/12 23:22:27 http elapsed=1.53889ms
+2020/07/12 23:22:27 http elapsed=1.627815ms
+2020/07/12 23:22:27 http elapsed=1.385111ms
+2020/07/12 23:22:27 http elapsed=1.445245ms
+2020/07/12 23:22:27 http elapsed=1.770762ms

@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/sparrc/go-ping"
+	"io"
+	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -28,22 +30,31 @@ func probeDNS() {
 	i := 0
 	r := 0
 	for r < rounds {
-		//ips, err := net.LookupIP(HOSTNAME)
-		pinger, err := ping.NewPinger(HOSTNAME)
-		pinger.SetPrivileged(true)
+		start := time.Now()
+		ips, err := net.LookupIP(HOSTNAME)
+		elapsed := time.Since(start)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
-		pinger.Count = 1
-		pinger.Run() // blocks until finished
-		stats := pinger.Statistics()
-		if stats.PacketsRecv != 1 {
-			errors++
-			log.Fatal("Host unreachable")
-		}
-		log.Printf("addr=%v rtt=%v\n", pinger.IPAddr(), stats.AvgRtt)
 
-		tmpSeries[i] = stats.AvgRtt
+		log.Printf("addr=%v time=%v\n", ips[0], elapsed)
+
+		start = time.Now()
+		resp, err := http.Get("http://" + HOSTNAME)
+		elapsed = time.Since(start)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		if resp.StatusCode != http.StatusOK {
+			log.Fatal("HTTP request failed: %v", resp.StatusCode)
+		}
+		io.Copy(ioutil.Discard, resp.Body)
+		resp.Body.Close()
+
+		log.Printf("http elapsed=%v\n", elapsed)
+
+		tmpSeries[i] = elapsed
 		i++
 		if i == 10 {
 			tsl.Lock()
@@ -82,9 +93,9 @@ func main() {
 	http.HandleFunc("/stop", statusHandler)
 	http.HandleFunc("/metrics", metricsHandler)
 
-	go probeDNS()
+	probeDNS()
 
-	http.ListenAndServe(":8998", nil)
+	//http.ListenAndServe(":8998", nil)
 
-	log.Printf("Running on 0.0.0.0:8998...\n")
+	//log.Printf("Running on 0.0.0.0:8998...\n")
 }

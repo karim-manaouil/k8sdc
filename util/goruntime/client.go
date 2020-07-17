@@ -92,8 +92,8 @@ func main() {
 		log.Fatal("defaultRoundTripper not an *http.Transport")
 	}
 	defaultTransport := *defaultTransportPointer
-	defaultTransport.MaxIdleConns = 1000
-	defaultTransport.MaxIdleConnsPerHost = 1000
+	// defaultTransport.MaxIdleConns = 2
+	// defaultTransport.MaxIdleConnsPerHost = 2
 
 	CusClient = &http.Client{Transport: &defaultTransport}
 

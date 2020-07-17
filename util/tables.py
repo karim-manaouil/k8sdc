@@ -389,7 +389,7 @@ def print_selection(selection):
 # ./tables.py CLIENT MODE={all|hdb} SW={0/table|1/cdf} [RESOURCE VERB]
 def main():    
     #latencies = ["0", "50", "250", "400", "50l", "250l", "400l"]
-    latencies = ["0", "50", "250", "250l"]
+    latencies = ["0", "50", "250", "400"]
     
     if len(sys.argv) < 3:
         print("missing argument")

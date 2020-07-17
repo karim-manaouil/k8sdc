@@ -1,0 +1,119 @@
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 62521
+max locked memory       (kbytes, -l) 65536
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1048576
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 62521
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+2020/06/22 21:36:37 Using http://10.144.0.2:8998/serv as server
+2020/06/22 21:36:37 Cycle 0 acheived 1000/1000 throughput, it took: 473.898534ms
+2020/06/22 21:36:38 Cycle 1 acheived 1000/1000 throughput, it took: 326.736408ms
+2020/06/22 21:36:39 Cycle 2 acheived 1000/1000 throughput, it took: 1.133108607s
+2020/06/22 21:36:43 Cycle 3 acheived 1000/1000 throughput, it took: 4.380239253s
+2020/06/22 21:36:47 Cycle 4 acheived 1000/1000 throughput, it took: 4.095820919s
+2020/06/22 21:36:51 Cycle 5 acheived 1000/1000 throughput, it took: 3.328258457s
+2020/06/22 21:36:53 Cycle 6 acheived 1000/1000 throughput, it took: 2.527682651s
+2020/06/22 21:36:54 Cycle 7 acheived 1000/1000 throughput, it took: 521.303614ms
+2020/06/22 21:36:54 Cycle 8 acheived 1000/1000 throughput, it took: 739.593412ms
+2020/06/22 21:36:55 Cycle 9 acheived 1000/1000 throughput, it took: 744.960503ms
+2020/06/22 21:36:56 Cycle 10 acheived 1000/1000 throughput, it took: 810.001976ms
+2020/06/22 21:37:01 Cycle 11 acheived 1000/1000 throughput, it took: 5.407983162s
+2020/06/22 21:37:02 Cycle 12 acheived 1000/1000 throughput, it took: 530.701375ms
+2020/06/22 21:37:03 Cycle 13 acheived 1000/1000 throughput, it took: 758.370182ms
+2020/06/22 21:37:03 Cycle 14 acheived 1000/1000 throughput, it took: 737.638292ms
+2020/06/22 21:37:04 Cycle 15 acheived 1000/1000 throughput, it took: 305.53432ms
+2020/06/22 21:37:04 Cycle 16 acheived 1000/1000 throughput, it took: 314.056413ms
+2020/06/22 21:37:05 Cycle 17 acheived 1000/1000 throughput, it took: 756.485558ms
+2020/06/22 21:37:06 Cycle 18 acheived 1000/1000 throughput, it took: 981.380831ms
+2020/06/22 21:37:08 Cycle 19 acheived 1000/1000 throughput, it took: 1.855690089s
+2020/06/22 21:37:09 Cycle 20 acheived 1000/1000 throughput, it took: 1.152278267s
+2020/06/22 21:37:10 Cycle 21 acheived 1000/1000 throughput, it took: 1.11981529s
+2020/06/22 21:37:10 Cycle 22 acheived 1000/1000 throughput, it took: 359.705321ms
+2020/06/22 21:37:11 Cycle 23 acheived 1000/1000 throughput, it took: 984.001899ms
+2020/06/22 21:37:12 Cycle 24 acheived 1000/1000 throughput, it took: 832.264821ms
+2020/06/22 21:37:12 Cycle 25 acheived 1000/1000 throughput, it took: 363.240344ms
+2020/06/22 21:37:13 Cycle 26 acheived 1000/1000 throughput, it took: 988.757718ms
+2020/06/22 21:37:14 Cycle 27 acheived 1000/1000 throughput, it took: 1.083267646s
+2020/06/22 21:37:15 Cycle 28 acheived 1000/1000 throughput, it took: 968.264512ms
+2020/06/22 21:37:16 Cycle 29 acheived 1000/1000 throughput, it took: 764.308911ms
+2020/06/22 21:37:18 Cycle 30 acheived 1000/1000 throughput, it took: 1.751499752s
+2020/06/22 21:37:19 Cycle 31 acheived 1000/1000 throughput, it took: 895.851824ms
+2020/06/22 21:37:19 Cycle 32 acheived 1000/1000 throughput, it took: 305.457989ms
+2020/06/22 21:37:20 Cycle 33 acheived 1000/1000 throughput, it took: 955.768353ms
+2020/06/22 21:37:21 Cycle 34 acheived 1000/1000 throughput, it took: 850.384587ms
+2020/06/22 21:37:21 Cycle 35 acheived 1000/1000 throughput, it took: 287.011287ms
+2020/06/22 21:37:22 Cycle 36 acheived 1000/1000 throughput, it took: 308.127694ms
+2020/06/22 21:37:22 Cycle 37 acheived 1000/1000 throughput, it took: 876.939843ms
+2020/06/22 21:37:23 Cycle 38 acheived 1000/1000 throughput, it took: 575.82348ms
+2020/06/22 21:37:24 Cycle 39 acheived 1000/1000 throughput, it took: 504.975434ms
+2020/06/22 21:37:24 Cycle 40 acheived 1000/1000 throughput, it took: 719.578278ms
+2020/06/22 21:37:25 Cycle 41 acheived 1000/1000 throughput, it took: 551.866198ms
+2020/06/22 21:37:25 Cycle 42 acheived 1000/1000 throughput, it took: 313.091779ms
+2020/06/22 21:37:26 Cycle 43 acheived 1000/1000 throughput, it took: 745.605403ms
+2020/06/22 21:37:26 Cycle 44 acheived 1000/1000 throughput, it took: 317.076175ms
+2020/06/22 21:37:27 Cycle 45 acheived 1000/1000 throughput, it took: 692.025078ms
+2020/06/22 21:37:27 Cycle 46 acheived 1000/1000 throughput, it took: 415.35781ms
+2020/06/22 21:37:29 Cycle 47 acheived 1000/1000 throughput, it took: 1.732987436s
+2020/06/22 21:37:29 Cycle 48 acheived 1000/1000 throughput, it took: 439.066098ms
+2020/06/22 21:37:30 Cycle 49 acheived 1000/1000 throughput, it took: 575.967403ms
+2020/06/22 21:37:31 Cycle 50 acheived 1000/1000 throughput, it took: 511.786965ms
+2020/06/22 21:37:31 Cycle 51 acheived 1000/1000 throughput, it took: 937.882409ms
+2020/06/22 21:37:32 Cycle 52 acheived 1000/1000 throughput, it took: 753.689977ms
+2020/06/22 21:37:33 Cycle 53 acheived 1000/1000 throughput, it took: 292.605745ms
+2020/06/22 21:37:33 Cycle 54 acheived 1000/1000 throughput, it took: 497.578285ms
+2020/06/22 21:37:34 Cycle 55 acheived 1000/1000 throughput, it took: 731.908778ms
+2020/06/22 21:37:34 Cycle 56 acheived 1000/1000 throughput, it took: 308.057642ms
+2020/06/22 21:37:35 Cycle 57 acheived 1000/1000 throughput, it took: 711.170773ms
+2020/06/22 21:37:36 Cycle 58 acheived 1000/1000 throughput, it took: 1.718488957s
+2020/06/22 21:37:38 Cycle 59 acheived 1000/1000 throughput, it took: 1.503746555s
+2020/06/22 21:37:39 Cycle 60 acheived 1000/1000 throughput, it took: 1.155666836s
+2020/06/22 21:37:39 Cycle 61 acheived 1000/1000 throughput, it took: 352.016105ms
+2020/06/22 21:37:40 Cycle 62 acheived 1000/1000 throughput, it took: 575.932385ms
+2020/06/22 21:37:41 Cycle 63 acheived 1000/1000 throughput, it took: 744.260707ms
+2020/06/22 21:37:41 Cycle 64 acheived 1000/1000 throughput, it took: 391.372502ms
+2020/06/22 21:37:42 Cycle 65 acheived 1000/1000 throughput, it took: 971.863611ms
+2020/06/22 21:37:43 Cycle 66 acheived 1000/1000 throughput, it took: 520.554449ms
+2020/06/22 21:37:43 Cycle 67 acheived 1000/1000 throughput, it took: 512.899435ms
+2020/06/22 21:37:44 Cycle 68 acheived 1000/1000 throughput, it took: 304.550678ms
+2020/06/22 21:37:44 Cycle 69 acheived 1000/1000 throughput, it took: 772.349853ms
+2020/06/22 21:37:45 Cycle 70 acheived 1000/1000 throughput, it took: 522.315037ms
+2020/06/22 21:37:45 Cycle 71 acheived 1000/1000 throughput, it took: 314.019309ms
+2020/06/22 21:37:45 Cycle 72 acheived 1000/1000 throughput, it took: 364.951218ms
+2020/06/22 21:37:47 Cycle 73 acheived 1000/1000 throughput, it took: 1.839626821s
+2020/06/22 21:37:49 Cycle 74 acheived 1000/1000 throughput, it took: 1.599743993s
+2020/06/22 21:37:51 Cycle 75 acheived 1000/1000 throughput, it took: 1.631722708s
+2020/06/22 21:37:52 Cycle 76 acheived 1000/1000 throughput, it took: 1.248180299s
+2020/06/22 21:37:52 Cycle 77 acheived 1000/1000 throughput, it took: 295.23614ms
+2020/06/22 21:37:53 Cycle 78 acheived 1000/1000 throughput, it took: 580.154713ms
+2020/06/22 21:37:53 Cycle 79 acheived 1000/1000 throughput, it took: 404.257242ms
+2020/06/22 21:37:54 Cycle 80 acheived 1000/1000 throughput, it took: 447.780244ms
+2020/06/22 21:37:54 Cycle 81 acheived 1000/1000 throughput, it took: 304.804912ms
+2020/06/22 21:37:54 Cycle 82 acheived 1000/1000 throughput, it took: 287.234889ms
+2020/06/22 21:37:54 Cycle 83 acheived 1000/1000 throughput, it took: 280.642365ms
+2020/06/22 21:37:55 Cycle 84 acheived 1000/1000 throughput, it took: 292.625521ms
+2020/06/22 21:37:55 Cycle 85 acheived 1000/1000 throughput, it took: 300.229397ms
+2020/06/22 21:37:57 Cycle 86 acheived 1000/1000 throughput, it took: 2.382931535s
+2020/06/22 21:37:58 Cycle 87 acheived 1000/1000 throughput, it took: 354.621071ms
+2020/06/22 21:37:58 Cycle 88 acheived 1000/1000 throughput, it took: 291.700145ms
+2020/06/22 21:37:58 Cycle 89 acheived 1000/1000 throughput, it took: 284.697621ms
+2020/06/22 21:37:58 Cycle 90 acheived 1000/1000 throughput, it took: 184.350417ms
+2020/06/22 21:37:59 Cycle 91 acheived 1000/1000 throughput, it took: 311.304624ms
+2020/06/22 21:37:59 Cycle 92 acheived 1000/1000 throughput, it took: 294.027496ms
+2020/06/22 21:37:59 Cycle 93 acheived 1000/1000 throughput, it took: 293.845684ms
+2020/06/22 21:38:00 Cycle 94 acheived 1000/1000 throughput, it took: 507.102464ms
+2020/06/22 21:38:01 Cycle 95 acheived 1000/1000 throughput, it took: 764.897284ms
+2020/06/22 21:38:01 Cycle 96 acheived 1000/1000 throughput, it took: 479.751183ms
+2020/06/22 21:38:01 Cycle 97 acheived 1000/1000 throughput, it took: 343.85023ms
+2020/06/22 21:38:02 Cycle 98 acheived 1000/1000 throughput, it took: 368.246827ms
+2020/06/22 21:38:02 Cycle 99 acheived 1000/1000 throughput, it took: 307.621553ms
+2020/06/22 21:38:02 Average request duration: 162.644676ms
+2020/06/22 21:38:02 Min=50.344734ms Max=5.402243696s

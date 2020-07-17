@@ -1,0 +1,119 @@
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 62521
+max locked memory       (kbytes, -l) 65536
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1048576
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 62521
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+2020/06/22 22:15:41 Using http://10.144.0.2:8998/serv as server
+2020/06/22 22:15:41 Cycle 0 acheived 50/50 throughput, it took: 106.003395ms
+2020/06/22 22:15:41 Cycle 1 acheived 50/50 throughput, it took: 53.815429ms
+2020/06/22 22:15:41 Cycle 2 acheived 50/50 throughput, it took: 53.174961ms
+2020/06/22 22:15:41 Cycle 3 acheived 50/50 throughput, it took: 53.563573ms
+2020/06/22 22:15:41 Cycle 4 acheived 50/50 throughput, it took: 54.124045ms
+2020/06/22 22:15:41 Cycle 5 acheived 50/50 throughput, it took: 53.580603ms
+2020/06/22 22:15:41 Cycle 6 acheived 50/50 throughput, it took: 53.545078ms
+2020/06/22 22:15:41 Cycle 7 acheived 50/50 throughput, it took: 54.124944ms
+2020/06/22 22:15:41 Cycle 8 acheived 50/50 throughput, it took: 53.636716ms
+2020/06/22 22:15:41 Cycle 9 acheived 50/50 throughput, it took: 53.26627ms
+2020/06/22 22:15:41 Cycle 10 acheived 50/50 throughput, it took: 53.085603ms
+2020/06/22 22:15:42 Cycle 11 acheived 50/50 throughput, it took: 52.64775ms
+2020/06/22 22:15:42 Cycle 12 acheived 50/50 throughput, it took: 52.795616ms
+2020/06/22 22:15:42 Cycle 13 acheived 50/50 throughput, it took: 52.778286ms
+2020/06/22 22:15:42 Cycle 14 acheived 50/50 throughput, it took: 52.76573ms
+2020/06/22 22:15:42 Cycle 15 acheived 50/50 throughput, it took: 52.619756ms
+2020/06/22 22:15:42 Cycle 16 acheived 50/50 throughput, it took: 52.484253ms
+2020/06/22 22:15:42 Cycle 17 acheived 50/50 throughput, it took: 52.470187ms
+2020/06/22 22:15:42 Cycle 18 acheived 50/50 throughput, it took: 53.098271ms
+2020/06/22 22:15:42 Cycle 19 acheived 50/50 throughput, it took: 52.330212ms
+2020/06/22 22:15:42 Cycle 20 acheived 50/50 throughput, it took: 55.858986ms
+2020/06/22 22:15:42 Cycle 21 acheived 50/50 throughput, it took: 52.852149ms
+2020/06/22 22:15:42 Cycle 22 acheived 50/50 throughput, it took: 53.056825ms
+2020/06/22 22:15:42 Cycle 23 acheived 50/50 throughput, it took: 52.805011ms
+2020/06/22 22:15:42 Cycle 24 acheived 50/50 throughput, it took: 52.897699ms
+2020/06/22 22:15:42 Cycle 25 acheived 50/50 throughput, it took: 52.277383ms
+2020/06/22 22:15:42 Cycle 26 acheived 50/50 throughput, it took: 52.409907ms
+2020/06/22 22:15:42 Cycle 27 acheived 50/50 throughput, it took: 52.884179ms
+2020/06/22 22:15:42 Cycle 28 acheived 50/50 throughput, it took: 52.826669ms
+2020/06/22 22:15:42 Cycle 29 acheived 50/50 throughput, it took: 52.955079ms
+2020/06/22 22:15:43 Cycle 30 acheived 50/50 throughput, it took: 52.860431ms
+2020/06/22 22:15:43 Cycle 31 acheived 50/50 throughput, it took: 52.608281ms
+2020/06/22 22:15:43 Cycle 32 acheived 50/50 throughput, it took: 52.095128ms
+2020/06/22 22:15:43 Cycle 33 acheived 50/50 throughput, it took: 52.341457ms
+2020/06/22 22:15:43 Cycle 34 acheived 50/50 throughput, it took: 51.865845ms
+2020/06/22 22:15:43 Cycle 35 acheived 50/50 throughput, it took: 52.456671ms
+2020/06/22 22:15:43 Cycle 36 acheived 50/50 throughput, it took: 52.155738ms
+2020/06/22 22:15:43 Cycle 37 acheived 50/50 throughput, it took: 52.015805ms
+2020/06/22 22:15:43 Cycle 38 acheived 50/50 throughput, it took: 52.505961ms
+2020/06/22 22:15:43 Cycle 39 acheived 50/50 throughput, it took: 52.27536ms
+2020/06/22 22:15:43 Cycle 40 acheived 50/50 throughput, it took: 55.373307ms
+2020/06/22 22:15:43 Cycle 41 acheived 50/50 throughput, it took: 53.094704ms
+2020/06/22 22:15:43 Cycle 42 acheived 50/50 throughput, it took: 53.243146ms
+2020/06/22 22:15:43 Cycle 43 acheived 50/50 throughput, it took: 53.078032ms
+2020/06/22 22:15:43 Cycle 44 acheived 50/50 throughput, it took: 52.875243ms
+2020/06/22 22:15:43 Cycle 45 acheived 50/50 throughput, it took: 53.060557ms
+2020/06/22 22:15:43 Cycle 46 acheived 50/50 throughput, it took: 53.220492ms
+2020/06/22 22:15:43 Cycle 47 acheived 50/50 throughput, it took: 53.147241ms
+2020/06/22 22:15:43 Cycle 48 acheived 50/50 throughput, it took: 52.984505ms
+2020/06/22 22:15:44 Cycle 49 acheived 50/50 throughput, it took: 52.221452ms
+2020/06/22 22:15:44 Cycle 50 acheived 50/50 throughput, it took: 52.16472ms
+2020/06/22 22:15:44 Cycle 51 acheived 50/50 throughput, it took: 52.557712ms
+2020/06/22 22:15:44 Cycle 52 acheived 50/50 throughput, it took: 52.698235ms
+2020/06/22 22:15:44 Cycle 53 acheived 50/50 throughput, it took: 53.05113ms
+2020/06/22 22:15:44 Cycle 54 acheived 50/50 throughput, it took: 53.204551ms
+2020/06/22 22:15:44 Cycle 55 acheived 50/50 throughput, it took: 52.988274ms
+2020/06/22 22:15:44 Cycle 56 acheived 50/50 throughput, it took: 52.849161ms
+2020/06/22 22:15:44 Cycle 57 acheived 50/50 throughput, it took: 53.518391ms
+2020/06/22 22:15:44 Cycle 58 acheived 50/50 throughput, it took: 52.432902ms
+2020/06/22 22:15:44 Cycle 59 acheived 50/50 throughput, it took: 52.949287ms
+2020/06/22 22:15:44 Cycle 60 acheived 50/50 throughput, it took: 53.535219ms
+2020/06/22 22:15:44 Cycle 61 acheived 50/50 throughput, it took: 53.531775ms
+2020/06/22 22:15:44 Cycle 62 acheived 50/50 throughput, it took: 53.814563ms
+2020/06/22 22:15:44 Cycle 63 acheived 50/50 throughput, it took: 53.282553ms
+2020/06/22 22:15:44 Cycle 64 acheived 50/50 throughput, it took: 52.373797ms
+2020/06/22 22:15:44 Cycle 65 acheived 50/50 throughput, it took: 53.51144ms
+2020/06/22 22:15:44 Cycle 66 acheived 50/50 throughput, it took: 53.850599ms
+2020/06/22 22:15:44 Cycle 67 acheived 50/50 throughput, it took: 52.845065ms
+2020/06/22 22:15:45 Cycle 68 acheived 50/50 throughput, it took: 55.386573ms
+2020/06/22 22:15:45 Cycle 69 acheived 50/50 throughput, it took: 53.95534ms
+2020/06/22 22:15:45 Cycle 70 acheived 50/50 throughput, it took: 54.730654ms
+2020/06/22 22:15:45 Cycle 71 acheived 50/50 throughput, it took: 53.26851ms
+2020/06/22 22:15:45 Cycle 72 acheived 50/50 throughput, it took: 54.062593ms
+2020/06/22 22:15:45 Cycle 73 acheived 50/50 throughput, it took: 53.935126ms
+2020/06/22 22:15:45 Cycle 74 acheived 50/50 throughput, it took: 53.664979ms
+2020/06/22 22:15:45 Cycle 75 acheived 50/50 throughput, it took: 52.505329ms
+2020/06/22 22:15:45 Cycle 76 acheived 50/50 throughput, it took: 52.398766ms
+2020/06/22 22:15:45 Cycle 77 acheived 50/50 throughput, it took: 53.014231ms
+2020/06/22 22:15:45 Cycle 78 acheived 50/50 throughput, it took: 53.842901ms
+2020/06/22 22:15:45 Cycle 79 acheived 50/50 throughput, it took: 53.447903ms
+2020/06/22 22:15:45 Cycle 80 acheived 50/50 throughput, it took: 53.120144ms
+2020/06/22 22:15:45 Cycle 81 acheived 50/50 throughput, it took: 53.414035ms
+2020/06/22 22:15:45 Cycle 82 acheived 50/50 throughput, it took: 53.474872ms
+2020/06/22 22:15:45 Cycle 83 acheived 50/50 throughput, it took: 52.776739ms
+2020/06/22 22:15:45 Cycle 84 acheived 50/50 throughput, it took: 53.472174ms
+2020/06/22 22:15:45 Cycle 85 acheived 50/50 throughput, it took: 53.413241ms
+2020/06/22 22:15:45 Cycle 86 acheived 50/50 throughput, it took: 53.241294ms
+2020/06/22 22:15:46 Cycle 87 acheived 50/50 throughput, it took: 52.573286ms
+2020/06/22 22:15:46 Cycle 88 acheived 50/50 throughput, it took: 53.273266ms
+2020/06/22 22:15:46 Cycle 89 acheived 50/50 throughput, it took: 53.922685ms
+2020/06/22 22:15:46 Cycle 90 acheived 50/50 throughput, it took: 52.835555ms
+2020/06/22 22:15:46 Cycle 91 acheived 50/50 throughput, it took: 53.449315ms
+2020/06/22 22:15:46 Cycle 92 acheived 50/50 throughput, it took: 52.722742ms
+2020/06/22 22:15:46 Cycle 93 acheived 50/50 throughput, it took: 53.856572ms
+2020/06/22 22:15:46 Cycle 94 acheived 50/50 throughput, it took: 53.664287ms
+2020/06/22 22:15:46 Cycle 95 acheived 50/50 throughput, it took: 53.497398ms
+2020/06/22 22:15:46 Cycle 96 acheived 50/50 throughput, it took: 54.976991ms
+2020/06/22 22:15:46 Cycle 97 acheived 50/50 throughput, it took: 54.211444ms
+2020/06/22 22:15:46 Cycle 98 acheived 50/50 throughput, it took: 53.914322ms
+2020/06/22 22:15:46 Cycle 99 acheived 50/50 throughput, it took: 53.231328ms
+2020/06/22 22:15:46 Average request duration: 52.233674ms
+2020/06/22 22:15:46 Min=50.390699ms Max=105.278251ms

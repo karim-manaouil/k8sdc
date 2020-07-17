@@ -167,8 +167,15 @@ api_latency_cdf() {
 # $2: filter
 # $3: metric !
 get_hdb_query() {
-    local q="client_request_retries"
-      
+#    local q="client_request_"      
+#    echo $q
+
+    sum_by="sum by $1"
+
+    metric=${3:-"client_request_durations_bucket"}
+
+    local q="$sum_by ($metric$2)"
+
     echo $q
 }
 
