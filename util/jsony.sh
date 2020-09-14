@@ -6,8 +6,8 @@ declare query
 
 TMP_SSHFS=$(mktemp)
 
-START="2020-05-15T2:00:00.000Z"
-END="2020-07-15T16:00:00.000Z"
+START="2020-07-01T2:00:00.000Z"
+END="2020-08-01T16:00:00.000Z"
 
 urlencode() {
 	echo "$@" | \

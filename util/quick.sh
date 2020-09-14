@@ -7,14 +7,15 @@ GROUP_BY_RV=$'(le,resource,verb)'
 
 # Components
 CLUSTER=$'{component!~\'clusterloader.*|Prometheus.*|operator.*\',verb!=\'WATCH\'}'
-MASTER=$'{component=~\'coredns.*|kube-apiserver.*|kube-controller.*|kubectl.*|kube-scheduler.*|cluster-p.*\',verb!=\'WATCH\'}'
+MASTER=$'{component=~\'coredns.*|kube-apiserver.*|kube-controller.*|kubectl.*|\
+		kube-scheduler.*|cluster-p.*\',verb!=\'WATCH\'}'
 WORKERS=$'{component=~\'kubelet.*|kube-proxy.*|calico.*\',verb!=\'WATCH\'}'
 KUBELETS=$'{component=~\'kubelet.*\',verb!=\'WATCH\'}'
 APISERVER=$'{component=~\'kube-apiserver.*\',verb!=\'WATCH\'}'
 SCHEDULER=$'{component=~\'kube-scheduler.*\',verb!=\'WATCH\'}'
 CONTROLLERS=$'{component=~\'kube-controller.*\',verb!=\'WATCH\'}'
 
-COMPS=('CLUSTER' 'MASTER' 'WORKERS' 'KUBELETS' 'APISERVER' 'SCHEDULER' 'CONTROLLERS')
+COMPS=('MASTER' 'WORKERS')
 
 # $1: groupby
 # $2: component

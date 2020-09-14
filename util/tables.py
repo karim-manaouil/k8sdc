@@ -312,13 +312,59 @@ def draw_cdfs(pair, ys):
                 y["x"].insert(0, y["x"][0])
 
         plt.plot(y["x"], y["y"], label = y["latency"] + "ms")
-    
-    plt.xlabel('Durations (s)')
-    plt.ylabel('Percentage')
+
+    plt.xticks(rotation=90)
+    plt.xticks([0, 1, 5, 9, 12, 16, 20, 25, 30, 36])
+    #plt.xlabel('Durations (s)')
+    #plt.ylabel('Percentage')
     plt.title('request duration CDF of ' + pair[0] + " " + pair[1])
     
     plt.legend()
     plt.show()
+
+
+def draw_2cdfs(pair, ya, yb): 
+   
+    params = {'xtick.labelsize':'x-small'}
+
+    plt.rcParams.update(params)
+
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig.suptitle('Horizontally stacked subplots')
+    for y in ya:
+        for p in range(99, 70, -1):
+            if p < y["y"][0]:
+                y["y"].insert(0, p)
+                y["x"].insert(0, y["x"][0])
+
+        ax1.plot(y["x"], y["y"], label = y["latency"] + "ms")
+
+    for y in yb:
+        for p in range(99, 70, -1):
+            if p < y["y"][0]:
+                y["y"].insert(0, p)
+                y["x"].insert(0, y["x"][0])
+
+        ax2.plot(y["x"], y["y"], label = y["latency"] + "ms")
+   
+
+    plt.setp((ax1, ax2), xticks=[0, 1, 5, 9, 12, 16, 20, 25, 30, 36] )
+
+    for ax in fig.axes:
+        matplotlib.pyplot.sca(ax)
+        plt.xticks(rotation=90)
+
+    matplotlib.rcParams.update({'font.size': 8})
+    
+    #ax1.set_title("kubelets and kube-proxy requests")
+    #ax2.set_title("master-based components requests")
+
+    #plt.xlabel('Durations (s)')
+    #plt.ylabel('Percentage')
+
+    ax1.legend()
+    plt.show()
+
 
 def draw_cdf_from_hdb(shdb_list):
     alld = []
@@ -403,7 +449,14 @@ def main():
         hdb_path = os.path.join("hdb", lat, client, mode + ".json")
         shdb_list.append({"latency": lat, 
                 "shdb":parse_hdb(hdb_path)})
-   
+
+    shdb_list_2 = [] 
+    for lat in latencies:
+        hdb_path = os.path.join("hdb", lat, "master", mode + ".json")
+        shdb_list_2.append({"latency": lat, 
+                "shdb":parse_hdb(hdb_path)})
+
+
     # switch
     sw=sys.argv[3]
     if sw == "table": # mode=hdb => table
@@ -418,8 +471,9 @@ def main():
         res = "all" if mode=="all" else sys.argv[4]
         verb = "all" if mode=="all" else sys.argv[5]
 
-        draw_cdfs([sys.argv[1] + " " + res, verb], 
-                generate_cdf_from_hdb(shdb_list, res, verb))
+        draw_2cdfs([sys.argv[1] + " " + res, verb], 
+                generate_cdf_from_hdb(shdb_list, res, verb),
+                generate_cdf_from_hdb(shdb_list_2,res,verb))
 
     elif sw == "longer" or sw == "less":# mode=hdb [latency] [time]
         ltoi={"0":0, "50":1, "250":2, "400":3, "1000":4}
